@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    #{include file="../../Common/Header.html"}
+
+    <!--start::HOOK-->
+    #{hook(\App\Consts\Hook::USER_VIEW_INDEX_HEADER)}
+    <!--end::HOOK-->
+    <style>
+        .c-nav {
+            width: 118px;
+            height: 48px;
+            line-height: 48px;
+            background: #FFFFFF;
+            border: 2px solid #7C87FF;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+        }
+        .c-nav-active{
+            background: #7C87FF;
+            color: #fff;
+        }
+        .c-product-list{
+            flex-wrap: wrap;
+        }
+
+        .c-product {
+            width: 202px;
+            height: 240px;
+            background: #FFFFFF;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 10px;
+            margin-right: 10px;
+        }
+        .c-product-img{
+            display:flex;
+            justify-content: center;
+            width: 100%;
+            height: 108px;
+        }
+
+        .c-product-img img {
+            align-self:center;
+            width: 108px;
+            max-height: 108px;
+            padding-top: 13px;
+        }
+    </style>
+</head>
+<body>
+<!-- loader Start -->
+#{include file="../../Common/Loader.html"}
+<!-- loader END -->
+<!-- Wrapper Start -->
+<div class="wrapper">
+    <!-- Sidebar  -->
+    #{include file="../../Common/Sidebar.html"}
+    <!-- TOP Nav Bar -->
+    #{include file="../../Common/TopBar.html"}
+    <!-- TOP Nav Bar END -->
+    <!-- Responsive Breadcrumb End-->
+    <!-- Page Content  -->
+    <div id="content-page" class="content-page">
+        <div class="container-fluid">
+            <div class="row ">
+                <div class="col-sm-12">
+                    <div class="p-3">
+                        <div class="d-flex pb-3 c-category-list">
+                            <div class="c-nav mr-4 c-nav-active">全部</div>
+                        </div>
+                        <div class="c-product-list d-flex"></div>
+                        <nav>
+                            <ul class="pagination justify-content-center paging mb-3"></ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="display: none">
+                <div class="col-sm-3 col-lg-3">
+                    <div class="iq-card">
+                        <div class="iq-card-body">
+                            <div class="user-detail text-center">
+                                <div class="user-profile">
+                                    <img src="#{$favicon}" style="border-radius:70px;"
+                                         class="avatar-130 img-fluid">
+                                </div>
+                                <div class="profile-detail mt-3">
+                                    <h3 class="d-inline-block">#{$config.shop_name}</h3>
+                                    <p class="mb-0">#{$config.description}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="iq-card">
+                        <div class="iq-card-body">
+                            <form>
+                                <div class="form-group">
+                                    <label for="search">搜索商品:</label>
+                                    <input type="text" class="form-control"
+                                           placeholder="可以输入您想要搜索的商品搜一搜.."
+                                           name="search" id="search">
+                                </div>
+                                <div class="form-group">
+                                    <label>选择商品分类</label>
+                                    <select class="form-control mb-3 category-list">
+                                        <option value="0">全部</option>
+                                    </select>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-9 col-lg-9 shop-view-layout">
+                    <div class="iq-card">
+                        <div class="iq-card-body p-0">
+                            <ul class="todo-task-lists m-0 p-0 shop-list"></ul>
+                        </div>
+                    </div>
+                    <nav>
+                        <ul class="pagination justify-content-center paging mb-3"></ul>
+                    </nav>
+                </div>
+                <div class="col-sm-3 shop-fast-view">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Wrapper END -->
+<!-- Footer -->
+#{include file="../../Common/Footer.html"}
+<script>
+
+    acg.ready("#{$from}", () => {
+
+        let shop_limit = 28;//商品数量限制
+        let defaultCategory = parseInt("#{$categoryId}");
+        let defaultCommodity = parseInt("#{$commodityId}");
+        let searchContent = "#{$smarty.get.search}";
+
+        if (searchContent != null) {
+            $('#search').val(searchContent);
+        }
+        let shopClickId = 0;
+        $("body").on("click", ".shopClick", function () {
+            if (shopClickId == $(this).attr("data-id")) {
+                return;
+            }
+            $(this).addClass('active-task');
+            $('.active-task').removeClass('active-task');
+            $(this).addClass('active-task');
+            shopClickId = $(this).attr("data-id");
+
+            view.card(shopClickId);
+        });
+
+        $("body").on("click", ".shop-check-detailed", function () {
+            dom.getShopInfo($(this).attr("data-id"), (res) => {
+                window.location.href = '/user/index/index?id=' + res.id
+            }, (error) => {
+                layer.msg(error.msg);
+            })
+        });
+
+        $("body").on('click','.c-nav',function () {
+            let categoryId = $(this).attr('data-id');
+            $(this).siblings().removeClass('c-nav-active');
+            $(this).addClass('c-nav-active');
+            dom.getShopData(categoryId, 1, shop_limit);
+        });
+
+        let view = {
+            card: (shop_id) => {
+                dom.getShopInfo(shop_id, (res) => {
+                    $('.shop-fast-view').css('display', '');
+                    console.log(res);
+                    let inventory = "";
+                    if (res.delivery_way == 1 || res.shared) {
+                        inventory = "<b style=\"color:rgb(59,58,58);\">未知</b>";
+                    } else {
+                        if (res.inventory_hidden == 1) {
+                            if (res.card <= 0) {
+                                inventory = "<b style=\"color:#ff0000;\">已售罄</b>";
+                            } else if (res.card <= 5) {
+                                inventory = "<b style=\"color:#eebd0c;\">马上卖完!</b>";
+                            } else if (res.card <= 20) {
+                                inventory = "<b style=\"color:#134afc;\">一般</b>";
+                            } else if (res.card > 20) {
+                                inventory = "<b style=\"color:#28d74d;\">充足</b>";
+                            }
+                        } else {
+                            inventory = "<b style=\"color:#e3920c;\">" + res.card + "件</b>";
+                        }
+                    }
+                    let html = `<div class="iq-card">
+                                <div class="iq-card-body">
+                                    <div class="user-detail text-center">
+                                        <div class="user-profile">
+                                            <img src="` + res.cover + `" loading="lazy" style="border-radius:70px;"
+                                                 class="avatar-130 img-fluid">
+                                        </div>
+                                        <div class="profile-detail mt-3">
+                                            <h3 class="d-inline-block">` + res.name + `</h3>
+                                            <p class="mb-0">商品单价: <b style="color:#9a11ff;">` + res.price + `元</b></p>
+                                            <p class="mb-0">发货方式: ` + ((res.delivery_way == 0 && !res.shared ? '<b style=\"color:#00ff36;\">自动发货</b>' : "<b style=\"color:#f84a4a;\">人工发货</b>")) + `</p></span>
+                                            <p class="mb-0">剩余库存: ` + inventory + `</p></span>
+                                            <br />
+                                            <div type="submit" class="btn btn-primary shop_card_link" data-clipboard-text="` + res.share_url + `">分享商品</div>
+                                            <a href="javascript:void(0);" class="btn btn-primary text-white shop-check-detailed" data-id="` + res.id + `">查看详细</a>
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>`;
+                    $('.shop-view-layout').removeClass('col-sm-9 col-lg-9');
+                    $('.shop-view-layout').addClass('col-sm-6 col-lg-6');
+                    $('.shop-fast-view').html(html);
+                    $('.shop_card_link').click(function () {
+                        let clipboard = new ClipboardJS(".shop_card_link");
+                        clipboard.on('success', function (e) {
+                            layer.msg("分享链接已经复制成功了，赶快发给好友吧！");
+                        });
+                    })
+                }, (error) => {
+                    //layer.msg(error.msg);
+                    $('.shop-fast-view').css('display', 'none');
+                    $('.shop-view-layout').removeClass('col-sm-6 col-lg-6');
+                    $('.shop-view-layout').addClass('col-sm-9 col-lg-9');
+                });
+            }
+        }
+
+        // $("body").on("click", ".shop_card_link", function () {
+        //     let clipboard = new ClipboardJS(".shop_card_link");
+        //     clipboard.on('success', function (e) {
+        //         layer.msg("分享链接已经复制成功了，赶快发给好友吧！");
+        //     });
+        // });
+
+
+        function inventoryHidden(state, count) {
+            if (state == 0) {
+                return count;
+            }
+            if (count <= 0) {
+                return '已售罄';
+            } else if (count <= 5) {
+                return '马上卖完';
+            } else if (count <= 20) {
+                return '一般';
+            } else if (count > 20) {
+                return '充足';
+            }
+        }
+
+        let dom = {
+            getShopInfo: (commodityId, done = null, error = null) => {
+                acg.API.commodity({
+                    commodityId: commodityId,
+                    success: res => {
+                        done(res);
+                    },
+                    error: res => {
+                        error(res);
+                    }
+                });
+            },
+            getClassData: () => {
+                acg.API.category({
+                    success: function (res) {
+                        // if (res.commodity_count <= 0) {
+                        //     return;
+                        // }
+                        $('.c-category-list').append(`<div class="c-nav mr-4 `+(defaultCategory == res.id ? 'c-nav-active' : '')+`" data-id="${res.id}">${res.name}</div>`)
+                        // $('.category-list').append(`<!--<option ` + (defaultCategory == res.id ? 'selected' : '') + ` value="` + res.id + `">` + res.name + `</option>-->`);
+                    },
+                    empty: () => {
+                        // $('.category-list').html('<option value="">没有分类</option>');
+                    },
+                    yes: () => {
+                        if (defaultCategory && defaultCategory != 0) {
+                            $('.category-list').val(defaultCategory);
+                            dom.getShopData(defaultCategory, 1, shop_limit);
+                            defaultCategory = null;
+                        }
+
+                        dom.getShopData(defaultCategory, 1, shop_limit, searchContent);
+
+                        $('.category-list').change(function () {
+                            dom.getShopData(this.value, 1, shop_limit);
+                        });
+                    }
+                });
+            },
+            getShopData: (categoryId, page, limit, keywords = null) => {
+                if (page == 1){
+                    $('.c-product-list').html('');//初let html = 始化商品内容
+                    $('.paging').html('');//初let html = 始化商品内容
+                }
+                var shop_list_view = '';
+                acg.API.commoditys({
+                    keywords: keywords,
+                    categoryId: categoryId,
+                    page: page, //初始页码
+                    limit: limit, // 每页显示多少商品
+                    success: item => {
+                        let owner = `站长自配`;
+                        if (item.owner) {
+                            owner = item.owner.username;
+                        }
+
+                        shop_list_view += `<div class="c-product shop-check-detailed" data-id="${item.id}">
+                                <div class="c-product-img">
+                                    <img src="${item.cover}" class="img-fluid ">
+                                </div>
+                                <div>${item.name}</div>
+                                <div></div>
+                                <div class="text-danger font-weight-bold font-size-22 pt-3">${item.price}<span
+                                        class="font-size-12 font-weight-normal">积分</span></div>
+                            </div>`;
+                    },
+                    empty: () => {
+                    },
+                    yes: () => {
+                        $('.paging').html('');
+                        $("body").off("click", ".pages-click");
+                        $("body").on("click", ".pages-click", function () {
+                            sessionStorage.setItem("xens_class-" + categoryId + "_page", $(this).attr("data-id"));
+                            dom.getShopData(categoryId, parseInt($(this).attr("data-id")), limit);
+                        });
+
+                        // $('.shop-list').html(shop_list_view);
+                        $('.c-product-list').html(shop_list_view);
+
+                        if (defaultCommodity) {
+                            $('.commodity').val(defaultCommodity);
+                            view.card(defaultCommodity);
+                            defaultCommodity = null;
+                        }
+
+                        // if (sessionStorage.getItem("cache_page") != null) {
+                        //     currentPage = parseInt(sessionStorage.getItem("cache_page"));
+                        // }
+                    },
+                    prev: (totalPage, page, i) => {
+                        $('.paging').append(`<li class="page-item ` + (parseInt(page) === 1 ? 'disabled' : 'pages-click') + `" data-id="` + i + `">
+                                <a class="page-link" href="javascript:void(0);" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>`);
+                    },
+                    pageRender: (totalPage, page, i) => {
+                        $('.paging').append(`<li class="page-item pages-click ` + (parseInt(page) === parseInt(i) ? 'active' : '') + `" data-id="` + i + `"><a class="page-link" href="javascript:(0);">` + i + `</a></li>`);
+                    },
+                    next: (totalPage, page, i) => {
+                        $('.paging').append(`<li class="page-item ` + (parseInt(page) >= parseInt(totalPage) ? 'disabled' : 'pages-click') + `" data-id="` + i + `">
+                                <a class="page-link" href="javascript:void(0);" aria-label="Previous">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>`);
+                    }
+                })
+            }
+        };
+        dom.getClassData(defaultCategory);
+    });
+
+    layui.define(['layer'], function () {
+
+    });
+
+</script>
+<!--start::HOOK-->
+#{hook(\App\Consts\Hook::USER_VIEW_INDEX_BODY)}
+<!--end::HOOK-->
+</body>
+<!--start::HOOK-->
+#{hook(\App\Consts\Hook::USER_VIEW_INDEX_FOOTER)}
+<!--end::HOOK-->
+</html>

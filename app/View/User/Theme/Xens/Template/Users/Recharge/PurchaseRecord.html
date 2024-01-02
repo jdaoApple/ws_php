@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    #{include file="../../Common/Header.html"}
+</head>
+<body>
+<!-- loader Start -->
+#{include file="../../Common/Loader.html"}
+<!-- loader END -->
+<!-- Wrapper Start -->
+<div class="wrapper">
+    <!-- Sidebar  -->
+    #{include file="../../Common/Sidebar.html"}
+    <!-- TOP Nav Bar -->
+    #{include file="../../Common/TopBar.html"}
+    <!-- TOP Nav Bar END -->
+    <!-- Responsive Breadcrumb End-->
+    <!-- Page Content  -->
+    <div id="content-page" class="content-page">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="iq-card">
+                        <div class="iq-card-header d-flex justify-content-between">
+                            <div class="iq-header-title">
+                                <h4 class="card-title">购买记录</h4>
+                            </div>
+                        </div>
+                        <div class="iq-card-body">
+                            <form class="search-query"></form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <ul class="list-inline p-0 m-0 bill"></ul>
+                    <nav>
+                        <ul class="pagination justify-content-center paging mb-3"></ul>
+                    </nav>
+                </div>
+                <div class="col-sm-6 view-key-box" style="display: none;">
+                    <div class="iq-card">
+                        <div class="iq-card-header d-flex justify-content-between">
+                            <div class="iq-header-title">
+                                <h4 class="card-title">查看卡密</h4>
+                            </div>
+                        </div>
+
+                        <div class="iq-card-body view-key"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Wrapper END -->
+<!-- Footer -->
+#{include file="../../Common/Footer.html"}
+
+<script>
+    layui.define(['layer', 'hex'], function () {
+        var table = layui.table
+            , form = layui.form
+            , util = layui.util
+            , cao = layui.hex
+            , $ = layui.$;
+
+
+        let currentPage = 1;//当前页
+        let totalPage = 0;//总页
+        let limit = 2;//限制数
+
+        let load = {
+            getData(page, limit, where = null) {
+                let loaderIndex = layer.load(0, {shade: ['0.3', '#fff']}); //0代表加载的风格，支持0-2
+                let whereData = {
+                    page: currentPage,
+                    limit: limit
+                };
+                if (where != null) {
+                    Object.assign(whereData, whereData, where)
+                }
+                console.log(whereData);
+                $.post('/user/api/purchaseRecord/data', whereData, res => {
+                    layer.close(loaderIndex);
+                    $('.bill').html('');
+                    $('.view-key-box').css('display', 'none');
+                    totalPage = Math.ceil(res.count / limit);
+                    load.pages_render();
+                    if (res.count === 0) {
+                        $('.bill').html('<span class="text-center">一条数据都没有~</span>');
+                        return;
+                    }
+                    let data = res.data;
+                    cao.setIdMap(res.data);
+                    data.forEach(value => {
+                        let pay_status = '<span class="text-warning">未支付</span>';
+                        if (value.status === 1) {
+                            pay_status = `<span class="text-success">已支付</span>`;
+                        }
+                        let delivery_status = ['<span class="text-success">未发货</span>', '<span class="text-success">已发货</span>'];
+
+                        let shop_name = '-';
+                        let delivery_way = '';
+                        let delivery_way_list = ['<span class="text-success">虚拟卡密</span>', '<span class="text-success">在线发货</span>'];
+                        let leave_message = '-';
+
+                        if (value.commodity) {
+                            let race = '';
+
+                            if (value.race) {
+                                race = " ( <b style='color: #20b033;'>" + value.race + "</b> )";
+                            }
+                            shop_name = value.commodity.name + race;
+                            delivery_way = delivery_way_list[value.commodity.delivery_way];
+
+                            if (value.status != 1 || !value.commodity.leave_message) {
+                                leave_message = '-';
+                            } else {
+                                leave_message = '<span style="padding: 5px;">' + value.commodity.leave_message + '</span>';
+                            }
+                        }
+
+                        let pay_method = '-';
+                        if (value.pay) {
+                            pay_method = '<span class=" text-warning"><img src="' + value.pay.icon + '"  style="width: 18px;border-radius: 100%;"/> ' + value.pay.name + '</span>';
+                        }
+
+                        let pay_time = '-';
+                        if (value.pay_time) {
+                            pay_time = value.pay_time;
+                        }
+
+                        let key = `<a href="javascript:void(0)" class="badge badge-primary shop-view-key" data-id="` + value.id + `">查看卡密</a> | <a href="/user/personal/secretDownload?id=` + value.id + `" class="badge badge-primary">下载卡密</a>`;
+
+                        let html = `<li class="d-flex mb-3 align-items-center p-3 bg-white rounded">
+                            <div class="user-img img-fluid">
+                                <img src="` + value.pay.icon + `" alt="story-img" class="img-fluid rounded-circle avatar-40">
+                            </div>
+                            <div class="media-support-info ml-3">
+                                <h6>` + shop_name + ` - ` + pay_status + `</h6>
+                                <b><p class="mb-0 font-size-12">订单号：<span class="text-success">` + value.trade_no + `</span></p></b>
+                                <b><p class="mb-0 font-size-12">数量：` + value.card_num + `个</p></b>
+                                <b><p class="mb-0 font-size-12">类型：` + delivery_way + `</p></b>
+                                <b><p class="mb-0 font-size-12">发货状态：` + delivery_status[value.delivery_status] + `</p></b>
+                                <b><p class="mb-0 font-size-12">支付方式：` + pay_method + `</p></b>
+                                <b><p class="mb-0 font-size-12">下单时间：` + value.create_time + `</p></b>
+                                <b><p class="mb-0 font-size-12">支付时间：` + pay_time + `</p></b>
+                                <b><p class="mb-0 font-size-12">商家留言：` + leave_message + `</p></b>
+                                <b><p class="mb-0 font-size-12">密钥管理：` + key + `</p></b>
+
+                            </div>
+                            <div class="iq-card-header-toolbar">
+                                <div class="badge badge-pill badge-primary">￥` + value.amount + `</div>
+                            </div>
+                        </li>`;
+                        $('.bill').append(html);
+                        //console.log(value);
+                    });
+
+                });
+            },
+            pages_render() {
+                let upper = '';
+                if (currentPage <= 1) {
+                    upper = `<li class="page-item disabled">
+                                <a class="page-link" href="javascript:(0);" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>`;
+                } else {
+                    upper = `<li class="page-item">
+                                <a class="page-link pages-click" data-id="` + (currentPage - 1) + `" href="javascript:(0);" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>`;
+                }
+
+                let content = '';
+                if (totalPage > 1) {
+                    for (let i = 1; i <= totalPage; i++) {
+                        if (i === parseInt(currentPage)) {
+                            content += `<li class="page-item pages-click active" data-id="` + i + `"><a class="page-link" href="javascript:(0);">` + i + `</a></li>`;
+                        } else {
+                            content += `<li class="page-item pages-click" data-id="` + i + `"><a class="page-link" href="javascript:(0);">` + i + `</a></li>`;
+                        }
+                    }
+                } else {
+                    content = `<li class="page-item active"><a class="page-link" href="javascript:(0);">1</a></li>`;
+                }
+                let lower = '';
+
+                if (currentPage >= totalPage) {
+                    lower = `<li class="page-item disabled">
+                                <a class="page-link" href="javascript:(0);" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>`;
+                } else {
+                    lower = `<li class="page-item">
+                                <a class="page-link pages-click" data-id="` + (currentPage + 1) + `" href="javascript:(0);" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>`;
+                }
+                if (totalPage === 0) {
+                    $('.paging').html('');
+                } else {
+                    $('.paging').html(upper + content + lower);
+                }
+            }
+        };
+
+        cao.query('.search-query', table, [
+            {
+                title: "订单号", name: "equal-trade_no", type: "input"
+            },
+            {
+                title: "支付状态", name: "equal-status", type: "select", dict: [
+                    {id: 0, name: "未支付"},
+                    {id: 1, name: "已支付"},
+                ]
+            },
+            {title: "购买时间从", name: "betweenStart-create_time", type: "date"},
+            {title: "到购买时间", name: "betweenEnd-create_time", type: "date"},
+        ], true, false, (res) => {
+            currentPage = 1;
+            load.getData(currentPage, limit, res)
+        });
+
+        load.getData(currentPage, limit);
+
+        $("body").on("click", ".pages-click", function () {
+            currentPage = $(this).attr("data-id");
+            load.getData(currentPage, limit);
+        });
+
+        $("body").on("click", ".shop-view-key", function () {
+            let data = cao.getMapItem($(this).attr('data-id'));
+            $('.view-key-box').css('display', '');
+            let html = ` <form class="form-horizontal">
+                                <div class="form-group row">
+                                    <label class="control-label col-sm-2 align-self-center mb-0">订单号:</label>
+                                    <div class="col-sm-10" style="color: #63b584;">
+                                        <b>` + data.trade_no + `</b>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="control-label col-sm-2 align-self-center mb-0">卡密管理:</label>
+                                    <div class="col-sm-10" style="color: #63b584;">
+                                        <a href="javascript:void(0);" class="clipboard clipboard-` + data.id + `" data-id="` + data.id + `" data-clipboard-text="` + data.secret + `">立即复制</a> | <a href="/user/personal/secretDownload?id=` + data.id + `">立即下载</a>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="card">卡密信息</label>
+                                    <textarea class="form-control" id="card" rows="4">` + data.secret + `</textarea>
+                                </div>
+                            </form>`;
+            $('.view-key').html(html)
+            $('.clipboard').click(function (){
+                let clipboard = new ClipboardJS(".clipboard-" + $(this).attr('data-id'));
+                clipboard.on('success', function (e) {
+                    layer.msg("卡密复制成功啦");
+                });
+            });
+        });
+        // $("body").on("click", ".clipboard", function () {
+        //     let clipboard = new ClipboardJS(".clipboard-" + $(this).attr('data-id'));
+        //     clipboard.on('success', function (e) {
+        //         layer.msg("卡密复制成功啦");
+        //     });
+        // });
+    });
+
+</script>
+</body>
+</html>

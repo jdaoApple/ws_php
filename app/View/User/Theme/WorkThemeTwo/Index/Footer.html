@@ -1,0 +1,17 @@
+<div class="content-icp">
+    #{$setting.copyright}
+    <br/>
+    <a href="https://beian.miit.gov.cn/" target="_blank">#{$setting.icp}</a>
+    <img src="#{App\Util\Helper::themeUrl('Assets/Img/ba.png')}"/>
+    <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=#{preg_replace('/[^\.0123456789]/s', '',$setting.gaicp)}" target="_blank">#{$setting.gaicp}</a>
+</div>
+<!--start::HOOK-->
+#{hook(\App\Consts\Hook::USER_GLOBAL_VIEW_BODY)}
+#{hook(\App\Consts\Hook::USER_VIEW_INDEX_BODY)}
+<!--end::HOOK-->
+</body>
+<!--start::HOOK-->
+#{hook(\App\Consts\Hook::USER_GLOBAL_VIEW_FOOTER)}
+#{hook(\App\Consts\Hook::USER_VIEW_INDEX_FOOTER)}
+<!--end::HOOK-->
+</html>

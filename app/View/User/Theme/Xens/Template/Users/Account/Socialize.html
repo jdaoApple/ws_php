@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    #{include file="../../Common/Header.html"}
+
+    <!--start::HOOK-->
+    #{hook(\App\Consts\Hook::USER_VIEW_INDEX_HEADER)}
+    <!--end::HOOK-->
+    <style>
+
+        .c-product {
+            width: 100%;
+            height: 60px;
+            line-height: 60px;
+            background: #F5F6F9;
+            border-radius: 8px;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .c-product-buy{
+            align-items: center;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<!-- loader Start -->
+#{include file="../../Common/Loader.html"}
+<!-- loader END -->
+<!-- Wrapper Start -->
+<div class="wrapper">
+    <!-- Sidebar  -->
+    #{include file="../../Common/Sidebar.html"}
+    <!-- TOP Nav Bar -->
+    #{include file="../../Common/TopBar.html"}
+    <!-- TOP Nav Bar END -->
+    <!-- Responsive Breadcrumb End-->
+    <!-- Page Content  -->
+    <div id="content-page" class="content-page">
+        <div class="container-fluid">
+            <div class="row ">
+                <div class="col-sm-12">
+                    <div class="accordion" id="accordionExample">
+                        #{foreach $result as $item}
+                        <div class="card">
+                            <div class="card-header" id="heading#{$item['id']}">
+                                <h2 class="mb-0">
+                                    <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse#{$item['id']}" aria-expanded="true" aria-controls="collapse#{$item['id']}">
+                                        <img src="#{$item['icon']}" alt="" style="width: 20px;height: 20px"> <span style="color: #445783">#{$item['name']}</span> <span class="font-size-12">共#{$item['count']}项</span> <span class="text-primary pl-3">显示全部</span>
+                                    </button>
+                                </h2>
+                            </div>
+
+                            <div id="collapse#{$item['id']}" class="collapse #{$item['class']}" aria-labelledby="heading#{$item['id']}" data-parent="#accordionExample">
+                                <div class="card-body">
+                                    #{foreach $item['list'] as $v}
+                                    <div class="c-product d-flex ">
+                                        <div class="ml-2">#{$v['name']}</div>
+                                        <div class="text-danger">#{$v['price']} 积分</div>
+                                        <div>#{$v['card_count']}件</div>
+                                        <div class="text-primary pr-3 d-flex c-product-buy" onclick="window.location.href = '/user/index/index?id=#{$v['id']}'"><i class="ri-shopping-cart-2-line"></i> 购买</div>
+                                    </div>
+                                    #{/foreach}
+                                </div>
+                            </div>
+                        </div>
+                        #{/foreach}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Wrapper END -->
+<!-- Footer -->
+#{include file="../../Common/Footer.html"}
+<script>
+
+    layui.define(['layer'], function () {
+
+    });
+
+</script>
+
+<!--start::HOOK-->
+#{hook(\App\Consts\Hook::USER_VIEW_INDEX_BODY)}
+<!--end::HOOK-->
+</body>
+<!--start::HOOK-->
+#{hook(\App\Consts\Hook::USER_VIEW_INDEX_FOOTER)}
+<!--end::HOOK-->
+</html>

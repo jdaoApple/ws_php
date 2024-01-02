@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <meta name="keywords" content="#{$config.keywords}"/>
+    <meta name="description" content="#{$config.description}"/>
+    <link href="#{$favicon}" rel="icon">
+    <link rel="shortcut icon" href="#{$favicon}">
+    <title>#{$config.title}</title>
+    <link rel="stylesheet" href="#{$static}/Assets/home/css/reset.css" type="text/css">
+    <link rel="stylesheet" href="#{$static}/Assets/home/css/bootstrap-grid.min.css" type="text/css">
+    <link rel="stylesheet" href="#{$static}/Assets/home/css/animations.css" type="text/css">
+    <link rel="stylesheet" href="#{$static}/Assets/home/css/perfect-scrollbar.css" type="text/css">
+    <link rel="stylesheet" href="#{$static}/Assets/home/css/owl.carousel.css" type="text/css">
+    <link rel="stylesheet" href="#{$static}/Assets/home/css/magnific-popup.css" type="text/css">
+    <link rel="stylesheet"
+          href="#{$static}/Assets/home/css/main.css?v=#{$app.version}"
+          type="text/css">
+    <script src="#{$static}/Assets/home/js/modernizr.custom.js"></script>
+    <!--start::HOOK-->
+    #{hook(\App\Consts\Hook::USER_VIEW_INDEX_HEADER)}
+    <!--end::HOOK-->
+    <script>
+        const cache_status = parseInt("#{$setting.cache}");
+        const cache_expire = parseInt("#{$setting.cache_expire}");
+    </script>
+
+    <style>
+        #{if $setting.type == 1}
+        .portfolio-grid.three-columns figure {
+            width: 25%;
+        }
+
+        .comm-height {
+            height: 90px;
+        }
+
+        #{else}
+        .portfolio-grid.three-columns figure {
+            width: 33.33333%;
+        }
+
+        .comm-height {
+            height: 110px;
+        }
+
+        #{/if}
+
+        @media only screen and (max-width: 768px) {
+            .portfolio-grid.three-columns figure {
+                width: 50%;
+            }
+
+            .comm-height {
+                height: 75px;
+            }
+        }
+
+        #{if $setting.style == 1}
+        .animated-section {
+            background-color: #ffffffd6;
+        }
+
+        .page-content {
+            background: linear-gradient(#875bf34a, #df799570);
+        }
+
+        .portfolio-grid.three-columns .goods {
+            background: linear-gradient(to bottom right, #e20c831f, #ddb6d300) !important;
+        }
+
+        .portfolio-filters li a {
+            -webkit-box-shadow: 0 1px 4px 0 #e166bbad;
+            box-shadow: 0 1px 4px 0 #e166bbad;
+            color: #78545e;
+        }
+
+        .portfolio-filters li.active a {
+            -webkit-box-shadow: 0 1px 4px 0 #2ca2e7bd;
+            box-shadow: 0 1px 4px 0 #2ca2e7bd;
+        }
+
+        .page-title h2 span {
+            color: #a788e7;
+        }
+
+        .search input {
+            border: 1px dashed #d394ae99;
+        }
+
+        .search button {
+            background: #e790b8;
+        }
+
+        #{/if}
+
+        .category-icon {
+            height: 22px;
+            width: 22px;
+            border-radius: 5px;
+            position: absolute;
+            opacity: 0.8;
+        }
+
+        .category-right {
+            margin-left: 26px;
+        }
+    </style>
+</head>
+
+<body style="background: url('#{$config.background_url}') fixed no-repeat;background-size: cover;">
+<!-- Animated Background -->
+<div class="lm-animated-bg" style="background-image: url(#{$static}/Assets/home/img/main_bg.png);"></div>
+<!-- /Animated Background -->
+
+<!-- Loading animation -->
+<div class="preloader">
+    <div class="preloader-animation">
+        <div class="preloader-spinner">
+        </div>
+    </div>
+</div>
+<!-- /Loading animation -->
+
+<div class="page">
+    <div class="page-content">
+
+        <header id="site_header" class="header mobile-menu-hide">
+            <div class="header-content">
+                <div class="header-photo">
+                    <img src="#{if $user} #{$user.avatar} #{else}#{$favicon}#{/if}">
+                </div>
+                <div class="header-titles">
+                    <h2>#{if $user} #{$user.username} #{else}#{$config.shop_name}#{/if}</h2>
+                    #{if $user}
+                    <h4><b style='color: #f5ecab;'>￥#{$user.balance}</b></h4>
+                    #{/if}
+                </div>
+            </div>
+
+            <ul class="main-menu">
+                <li class="active">
+                    <a href="#notice" class="nav-anim">
+                        <i class="menu-icon lnr lnr-bullhorn"></i>
+                        <span class="link-text">公告</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#shop" class="nav-anim">
+                        <i class="menu-icon lnr lnr-briefcase"></i>
+                        <span class="link-text">购买商品</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#query" class="nav-anim">
+                        <i class="menu-icon lnr lnr-magnifier"></i>
+                        <span class="link-text">订单查询</span>
+                    </a>
+                </li>
+
+                <li style="display: none;">
+                    <a href="#buy"></a>
+                </li>
+            </ul>
+
+
+            <div class="header-buttons">
+                #{if !$user}
+                <a href="/user/authentication/login" class="btn btn-primary">登录</a>
+                <a href="/user/authentication/register" class="btn btn-primary">注册</a>
+                #{else}
+                <a href="/user/dashboard/index" class="btn btn-primary">个人中心</a>
+                <a href="/user/authentication/logout" class="btn btn-primary">注销</a>
+                #{/if}
+            </div>
+            <h4 style="color: white;margin-top: 36px;padding: 0 20px 0 20px;">#{$setting.notice}</h4>
+
+            <div class="copyrights">#{$setting.icp}</div>
+        </header>
+
+        <!-- Mobile Navigation -->
+        <div class="menu-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <!-- End Mobile Navigation -->
+
+
+        <div class="content-area">
+            <div class="animated-sections">
+                <section data-id="notice" class="animated-section start-page">
+                    <div class="section-content vcentered">
+
+                        <div class="row">
+                            <div class="col-sm-12 col-md-12 col-lg-12">
+                                #{$config.notice}
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+                <section data-id="buy" class="animated-section">
+                    <div class="page-title">
+                        <h2><span class="commodity_name">...(｡•ˇ‸ˇ•｡) ...</span></h2>
+                    </div>
+
+                    <div class="section-content">
+                        <div class="row __out">
+                            <div class="col-sm-12 col-md-12 col-lg-12"
+                                 style="text-align: center;margin-top:50px;font-weight: bolder;color: #d38e8e;">
+                                客官，你心爱的商品不见了！<a href="#shop">点我继续购物！（。>︿<）_θ</a>
+                            </div>
+                        </div>
+                    </div>
+                    <a class="commodity-close" href="javascript:void(0);"><i class="fa fa-caret-left" aria-hidden="true"></i></a>
+                </section>
+
+                <section data-id="shop" class="animated-section">
+                    <div class="page-title">
+                        <h2>购买<span>商品</span></h2>
+                    </div>
+
+                    <div class="section-content">
+
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12">
+                                <!-- Portfolio Content -->
+                                <div class="portfolio-content">
+                                    <div class="search">
+                                        <input type="text" placeholder="搜索商品.." class="keywords" name="searchs"
+                                               value="#{$smarty.get.keywords}">
+                                        <button class="search-btn">搜索</button>
+                                    </div>
+
+                                    <ul class="portfolio-filters category-list">
+                                        <li class="active category-all">
+                                            <a class="filter btn btn-sm btn-link" data-group="category_all">全部</a>
+                                        </li>
+                                    </ul>
+                                    <div class="portfolio-grid three-columns"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+
+                <section data-id="query" class="animated-section">
+                    <div class="page-title">
+                        <h2>查询<span>订单</span></h2>
+                    </div>
+
+                    <div class="section-content">
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12">
+                                <div class="search" style="text-align: center;">
+                                    <input type="text" placeholder="订单号/联系方式" class="query-keywords"
+                                           value="#{$smarty.get.tradeNo}">
+                                    <button class="query-btn">查询</button>
+                                </div>
+
+
+                                <div class="order-success timeline timeline-second-style clearfix">
+
+
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                </section>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="__html">
+    <div class="col-xs-12 col-sm-12">
+        <div class="open-commodity"><!--/product-information-->
+            <form class="commodity-form commodity-di">
+                <p class="share_url"><i class="fa fa-share"></i> 将宝贝分享给好友</p>
+                <p class="description"></p>
+                <p class="seckill general">限时秒杀：<span class="seckill_timer"></span></p>
+                <p class="general">商品单价：<span class="price">0</span></p>
+                <p class="general">发货方式：<span class="delivery_way"></span></p>
+                <p class="general">联系方式：<input class="acg-input contact" type="text" name="contact"
+                                               placeholder="请输入联系方式">
+                </p>
+                <p class="password general">查询密码：<input class="acg-input" type="text"
+                                                        name="password"
+                                                        placeholder="请设置查询密码">
+                </p>
+                <p class="widget_g general"></p>
+                <p class="coupon general">优惠代卷：<input class="acg-input" type="text" name="coupon"
+                                                      placeholder="没有可不填写"
+                                                      onchange="acg.API.tradeAmountPerform('.trade_amount')">
+                </p>
+                <p class="general race-view">选择种类：<span></span></p>
+                <p class="general">购买数量：<input class="acg-input purchase_num" type="number"
+                                               name="num"
+                                               value="1"
+                                               onchange="acg.API.tradeAmountPerform('.trade_amount')">
+                    <span
+                            class="com_kucun">库存：<span class="card_count">0</span></span></p>
+                <p class="general captcha_status">人机验证：<input class="acg-input captcha-input"
+                                                              name="captcha" type="text"
+                                                              placeholder="请输入验证码"> <img
+                        class="captcha"></p>
+                <p class="purchase_count general"></p>
+                <p class="general">订单金额：<span class="trade_amount">0</span></p>
+                <p class="general">售前客服：<a target="_blank" class="web-service"><i class="fa fa-user-plus"></i> 在线咨询</a>
+                </p>
+                <p class="lot general"></p>
+                <p class="draft_status general"></p>
+                <div class="pay-content">
+                    <p class=" pay_title"><span><i class="fa fa-shopping-cart"></i> 结账</span></p>
+                    <p class="general pay_list"></p>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script src="#{$static}/Assets/home/js/jquery-2.1.3.min.js"></script>
+<script src="#{$static}/Assets/home/js/modernizr.custom.js"></script>
+<script src="#{$static}/Assets/home/js/animating.js"></script>
+<script src="#{$static}/Assets/home/js/imagesloaded.pkgd.min.js"></script>
+<script src='#{$static}/Assets/home/js/perfect-scrollbar.min.js'></script>
+<script src='#{$static}/Assets/home/js/jquery.shuffle.min.js'></script>
+<script src='#{$static}/Assets/home/js/masonry.pkgd.min.js'></script>
+<script src='#{$static}/Assets/home/js/owl.carousel.min.js'></script>
+<script src="#{$static}/Assets/home/js/jquery.magnific-popup.min.js"></script>
+<script src="#{$static}/Assets/home/js/main.js"></script>
+<script src="/assets/static/acg.js?v=#{$app.version}"></script>
+
+<script>
+    try {
+        acg.ready("#{$from}", () => {
+            let defaultCategory = "#{$categoryId}";
+            let defaultCommodity = "#{$commodityId}";
+            let currentCommodity = 0;
+
+            let __html = $('.__html').html();
+            $('.__html').html("");
+
+            function inventoryHidden(state, count) {
+                if (state == 0) {
+                    return count;
+                }
+                if (count <= 0) {
+                    return '已售罄';
+                } else if (count <= 5) {
+                    return '马上卖完';
+                } else if (count <= 20) {
+                    return '一般';
+                } else if (count > 20) {
+                    return '充足';
+                }
+            }
+
+            if (window.location.hash == "#buy" && currentCommodity == 0) {
+                window.location.href = "#shop";
+            }
+
+            if (window.location.hash == "") {
+                window.location.href = "#shop";
+            }
+
+
+            $(".commodity-close").click(function () {
+                window.location.href = "#shop";
+            });
+
+            function portfolio_init() {
+                let portfolio_grid = $('.portfolio-grid'), portfolio_filter = $('.portfolio-filters');
+                if (portfolio_grid) {
+                    portfolio_grid.shuffle({speed: 450, itemSelector: 'figure'});
+                    portfolio_filter.on("click", ".filter", function (e) {
+                        portfolio_grid.shuffle('update');
+                        e.preventDefault();
+                        $('.portfolio-filters .filter').parent().removeClass('active');
+                        $(this).parent().addClass('active');
+                        portfolio_grid.shuffle('shuffle', $(this).attr('data-group'));
+                    });
+
+                    if (defaultCommodity && defaultCommodity != 0) {
+                        $('.goods[data-id=' + defaultCommodity + ']').trigger("click");
+                        defaultCommodity = null;
+                    }
+
+                    if (defaultCategory && defaultCategory != 0) {
+                        $('.category-click-' + defaultCategory).trigger('click');
+                        defaultCategory = null;
+                    }
+                }
+            }
+
+            let dom = {
+                getClassData: () => {
+                    acg.API.category({
+                        success: function (res) {
+                            if (res.commodity_count <= 0) {
+                                return;
+                            }
+                            $('.category-list').append(`<li class="` + (defaultCategory == res.id ? 'active' : '') + `"><a class="filter btn btn-sm btn-link category-click-` + res.id + `" data-group="` + res.id + `"><img class="category-icon" src="` + res.icon + `"><span class="category-right">` + res.name + `</span></a></li>`);
+                        },
+                        empty: () => {
+                            layer.msg("客官，很遗憾，本站一个分类都没有呢~");
+                        },
+                        yes: () => {
+                            if (defaultCategory && defaultCategory != 0) {
+                                $('.category-all').removeClass("active");
+                            }
+                            dom.getShopData();
+                        }
+                    });
+                },
+                getShopData: () => {
+                    acg.API.commoditys({
+                        keywords: "#{$smarty.get.keywords}",
+                        categoryId: 0,
+                        success: item => {
+                            let html = `<figure class="item lbaudio ` + (item.delivery_way == 0 && !item.shared ? (item.card_count <= 0 ? 'commodity-die' : '') : '') + `" data-groups='["category_all", "` + item.category_id + `"` + (item.recommend == 1 ? `,"-10"` : '') + `]'><div class="goods " data-id="` + item.id + `">
+                                            <div class="portfolio-item-img">
+                                                <div class="comm-height" style="background: url(` + item.cover + `) center center no-repeat;background-size: cover;border-top-left-radius: 15px;border-top-right-radius: 15px;"></div>
+                                                <a href="javascript:void(0)" data-id="` + item.id + `"></a>
+                                            </div>
+                                            <h4 class="name">` + item.name + `</h4>
+                                            <span class="b_kucun">库存:` + (item.delivery_way == 0 && !item.shared ? inventoryHidden(item.inventory_hidden, item.card_count) : "未知") + `</span>
+                                            <span class="b_price">￥` + item.price + `</span><div></figure>`;
+                            $('.three-columns').append(html);
+                        },
+                        empty: () => {
+                            layer.msg("客官，真遗憾，一个商品也没有呢~");
+                        },
+                        yes: () => {
+                            let $portfolio_container = $(".portfolio-grid");
+                            $portfolio_container.imagesLoaded(function () {
+                                portfolio_init(this);
+                            });
+
+                            $('.goods').click(function () {
+                                let id = $(this).attr("data-id");
+                                currentCommodity = id;
+                                $('.__out').html(__html);
+                                //获取商品
+                                acg.API.commodity({
+                                    commodityId: id,
+                                    auto: {
+                                        race: '.race-view',
+                                        name: '.commodity_name',
+                                        share_url: '.share_url',
+                                        description: '.description',
+                                        delivery_way: '.delivery_way',
+                                        contact_type: '.contact',
+                                        coupon: '.coupon',
+                                        purchase_num: '.purchase_num',
+                                        captcha: '.captcha',
+                                        password_status: '.password',
+                                        lot_status: '.lot',
+                                        seckill_status: '.seckill',
+                                        card: '.card_count',
+                                        purchase_count: '.purchase_count',
+                                        price: '.price',
+                                        trade_amount: '.trade_amount',
+                                        draft_status: '.draft_status',
+                                        widget: '.widget_g',
+                                    },
+                                    success: res => {
+                                        window.location.href = "#buy"
+                                        $('.qq-service').attr("href", 'https://wpa.qq.com/msgrd?v=1&uin=' + res.service_qq);
+                                        $('.web-service').attr("href", res.service_url);
+                                        $('.cover').attr("src", res.cover);
+                                        $('.loading').hide();
+                                        $('.commodity-html').show();
+                                        if (!res.login) {
+                                            if (res.only_user == 1 || res.purchase_count > 0) {
+                                                $(".pay_list").removeClass("pay_list").html('<div class="need-login">该商品需要登录才能购买，<a href="/user/authentication/login?goto=' + res.share_url + '">现在登录</a></div>');
+                                            }
+                                        }
+                                    }
+                                });
+                                //获取支付方式
+                                acg.API.pay({
+                                    success: item => {
+                                        if (item.handle === "#system") {
+                                            #{if $user}
+                                            $('.pay_list').append(' <a class="pay-button" onclick="acg.API.tradePerform(' + item.id + ')" style="line-height: 22px;color: #ffffff;background:#e5b9b9b0;"> <img src="' + item.icon + '"> ' + item.name + '(#{sprintf("%.2f", $user.balance)})</a>');
+                                            #{/if }
+                                        } else {
+                                            $('.pay_list').append(' <a class="pay-button" onclick="acg.API.tradePerform(' + item.id + ')" style="line-height: 22px;"><img src="' + item.icon + '"> ' + item.name + '</a>');
+                                        }
+                                    }
+                                });
+                            });
+                        }
+                    });
+                }
+            }
+            dom.getClassData();
+
+
+            $('.search-btn').click(function () {
+                let val = $('.keywords').val();
+                if (!val) {
+                    window.location.href = "/#shop";
+                    return;
+                }
+
+                window.location.href = "?keywords=" + $('.keywords').val() + "#shop";
+            });
+
+            $(".keywords").keypress(function (even) {
+                if (even.which == 13) {
+                    $('.search-btn').click();
+                }
+            });
+
+            function query(keywords) {
+                let orderSuccess = $('.order-success');
+                orderSuccess.html('');
+                acg.API.query({
+                    keywords: keywords,
+                    success: order => {
+                        if (order.commodity && order.pay) {
+                            let status = '<span style="color: red;">未支付</span>';
+                            if (order.status === 1) {
+                                status = '<span style="color: #1fdeb1;">已支付</span>';
+                            }
+
+                            let race = "";
+                            if (order.race) {
+                                race = " ( <b style='color: #20b033;'>" + order.race + "</b> )";
+                            }
+
+                            let html2 = `
+                                <div class="timeline-item clearfix">
+                                        <div class="left-part">
+                                            <h5 class="item-period">` + status + `</h5>
+                                            <span class="item-company">#{hook(\App\Consts\Hook::USER_VIEW_QUERY_TRADE_NO)} ` + order.trade_no + `</span>
+
+                                        </div>
+                                        <div class="divider"></div>
+                                        <div class="right-part">
+                                            <h4 class="item-title" style="color:#0db7df;">` + order.commodity.name + race + `</h4>
+                                            <div class="order-line">购买数量：<span style="color:#d3891a;">` + order.card_num + `个</span></div>
+                                            <div class="order-line">下单时间：<span class="create_time">` + order.create_time + `</span></div>
+                                            <div class="order-line">支付方式：<span class="icon pay-type"><img src="` + order.pay.icon + `" style="height: 14px;"> ` + order.pay.name + `</span></div>
+                                            <div class="order-line">售后客服：<a target="_blank" href="` + order.service_url + `" style="font-size:14px;"><i class="fa fa-user-plus"></i> 在线咨询</a></div>
+                                            <div class="order-line" style="` + (order.status == 1 ? '' : 'display: none;') + `">支付时间：<span class="status">` + order.pay_time + `</span></div>
+                                            <div class="order-line" style="` + (order.leave_message ? "" : " display: none;") + `">使用说明：<span class="status">` + order.leave_message + `</span></div>
+                                            <div class="order-line">卡密信息：<input style="` + (order.commodity.password_status == 1 ? #{if $user} 'display:none' #{else}''#{/if} : 'display:none;') + `"  type="password" placeholder="请输入查询密码.." class="query-password passId-` + order.id + `"> <span class="getCard" data-id="` + order.id + `">查看</span></div>
+                                            <div style="display: none;" class="order-line cardInfoView-` + order.id + `"><textarea class="card-textarea cardInfo-` + order.id + `"></textarea></div>
+                                        </div>
+                                    </div>
+                                `;
+
+                            orderSuccess.append(html2);
+                        }
+                    },
+                    yes: res => {
+                        $('.getCard').click(function () {
+                            let orderId = $(this).attr('data-id');
+                            acg.API.secret({
+                                orderId: orderId,
+                                password: $('.passId-' + orderId).val(),
+                                success: res => {
+                                    let secret = "";
+                                    if (res.widget) {
+                                        secret += "--------------您隐私内容---------------\n";
+                                        for (const widgetKey in res.widget) {
+                                            secret += res.widget[widgetKey].cn + "：" + res.widget[widgetKey].value + "\n";
+                                        }
+                                        secret += "--------------卡密信息---------------\n";
+                                    }
+                                    secret += res.secret;
+                                    $('.cardInfo-' + orderId).html(secret);
+                                    $('.cardInfoView-' + orderId).show(80);
+                                }
+                            });
+                        });
+                    },
+                    error: () => {
+                    }
+                });
+            }
+
+            $('.query-btn').click(function () {
+                query($('.query-keywords').val());
+            });
+
+            $('.query-keywords').keyup(function (event) {
+                if (event.keyCode == 13) {
+                    $('.query-btn').click();
+                }
+            });
+
+            #{if $smarty.get.tradeNo != "" || $user}
+            $('.query-btn').click();
+            #{/if}
+        });
+    } catch (e) {
+        console.log(e)
+    }
+</script>
+<!--start::HOOK-->
+#{hook(\App\Consts\Hook::USER_VIEW_INDEX_BODY)}
+<!--end::HOOK-->
+</body>
+<!--start::HOOK-->
+#{hook(\App\Consts\Hook::USER_VIEW_INDEX_FOOTER)}
+<!--end::HOOK-->
+</html>

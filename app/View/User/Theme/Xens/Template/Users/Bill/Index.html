@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    #{include file="../../Common/Header.html"}
+</head>
+<body>
+<!-- loader Start -->
+#{include file="../../Common/Loader.html"}
+<!-- loader END -->
+<!-- Wrapper Start -->
+<div class="wrapper">
+    <!-- Sidebar  -->
+    #{include file="../../Common/Sidebar.html"}
+    <!-- TOP Nav Bar -->
+    #{include file="../../Common/TopBar.html"}
+    <!-- TOP Nav Bar END -->
+    <!-- Responsive Breadcrumb End-->
+    <!-- Page Content  -->
+    <div id="content-page" class="content-page">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-12 col-lg-12">
+                    <div class="iq-card">
+                        <div class="iq-card-header d-flex justify-content-between">
+                            <div class="iq-header-title">
+                                <h4 class="card-title">我的账单</h4>
+                            </div>
+                        </div>
+                        <div class="iq-card-body">
+                            <form class="search-query"></form>
+                            <table id="bill"></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Wrapper END -->
+<!-- Footer -->
+#{include file="../../Common/Footer.html"}
+
+<script>
+    layui.define(['layer', 'hex'], function () {
+        var table = layui.table
+            , form = layui.form
+            , util = layui.util
+            , cao = layui.hex
+            , $ = layui.$;
+
+        let status = ['<span class="badge badge-danger">支出</span>', '<span class="badge badge-success">收入</span>'];
+        let currency = ['<span style="color: #0C84D1;">余额</span>', '<span style="color: #13b413;">硬币</span>'];
+
+        var tableIns = table.render({
+            elem: '#bill',
+            method: "post",
+            url: '/user/api/bill/data',
+            page: true, //开启分页
+            parseData: (res) => {
+                if (res.code === 200) {
+                    return {
+                        "code": 0,
+                        "msg": res.msg,
+                        "count": res.count,
+                        "data": res.data
+                    };
+                }
+            },
+            cols: [
+                [
+                    {
+                        field: 'amount', title: '数量', templet: function (item) {
+                            if (item.type == 0) {
+                                return '<span class="badge border border-danger text-danger">‐' + item.amount + '</span>';
+                            }
+                            return '<span class="badge border border-primary text-primary">+' + item.amount + '</span>';
+                        }
+                    },
+                    {
+                        field: 'balance', title: '余额', templet: function (item) {
+                            return '<span style="color: #0C84D1;">' + item.balance + '</span>';
+                        }
+                    },
+                    {
+                        field: 'currency', title: '货币', templet: function (item) {
+                            return currency[item.currency];
+                        }
+                    },
+                    {
+                        field: 'type', title: '支出/收入', templet: function (item) {
+                            return status[item.type];
+                        }
+                    },
+                    {
+                        field: 'log', title: '交易内容', templet: function (item) {
+                            return '<span class="badge border border-dark text-dark">' + item.log + '</span>';
+                        }
+                    },
+                    {
+                        field: 'create_time', title: '交易时间', templet: function (item) {
+                            return '<span class="badge border border-secondary text-secondary">' + item.create_time + '</span>';
+                        }, width: 170
+                    }
+                ]
+            ],
+            done: (res) => {
+                table.render();
+                cao.setIdMap(res.data);
+
+                $('.lock').click(function () {
+                    let id = cao.getMapItem($(this).attr('data-id')).id;
+                    $.post('/user/api/card/lock', {list: [id]}, res => {
+                        layer.msg(res.msg);
+                        tableIns.reload();
+                    });
+                });
+                $('.unlock').click(function () {
+                    let id = cao.getMapItem($(this).attr('data-id')).id;
+                    $.post('/user/api/card/unlock', {list: [id]}, res => {
+                        layer.msg(res.msg);
+                        tableIns.reload();
+                    });
+                });
+
+                $('.delete').click(function () {
+                    let remove_id = cao.getMapItem($(this).attr('data-id')).id;
+                    layer.confirm('您正在移除该卡密，是否要继续？', {
+                        btn: ['确认移除', '取消']
+                    }, function () {
+                        $.post('/user/api/card/del', {list: [remove_id]}, res => {
+                            layer.msg(res.msg);
+                            tableIns.reload();
+                        });
+                    });
+                });
+            }
+        });
+
+        cao.query('.search-query', table, [
+            {
+                title: "支出/收入", name: "equal-type", type: "select", dict: [
+                    {id: 0, name: "支出"},
+                    {id: 1, name: "收入"},
+                ]
+            }, {
+                title: "钱包类型", name: "equal-currency", type: "select", dict: [
+                    {id: 0, name: "余额"},
+                    {id: 1, name: "硬币"},
+                ]
+            },
+            {title: "开始时间", name: "betweenStart-create_time", type: "date"},
+            {title: "结束时间", name: "betweenEnd-create_time", type: "date"},
+        ], true, false, (res) => {
+            tableIns.reload({
+                where: res,
+                page: {
+                    curr: 1
+                }
+            }, false);
+        });
+    });
+
+</script>
+</body>
+</html>

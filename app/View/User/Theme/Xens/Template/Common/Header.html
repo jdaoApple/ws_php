@@ -1,0 +1,48 @@
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>#{$title} - #{$config.title}</title>
+<!-- Favicon -->
+<link href="#{$favicon}" rel="icon">
+
+<link rel="stylesheet" href="/assets/static/codemirror/lib/codemirror.css">
+<link rel="stylesheet" href="/assets/static/codemirror/addon/fold/foldgutter.css">
+<script src="/assets/static/codemirror/lib/codemirror.js"></script>
+<script src="/assets/static/codemirror/addon/fold/foldcode.js"></script>
+<script src="/assets/static/codemirror/addon/fold/foldgutter.js"></script>
+<script src="/assets/static/codemirror/addon/fold/brace-fold.js"></script>
+<script src="/assets/static/codemirror/addon/fold/xml-fold.js"></script>
+<script src="/assets/static/codemirror/addon/fold/indent-fold.js"></script>
+<script src="/assets/static/codemirror/addon/fold/markdown-fold.js"></script>
+<script src="/assets/static/codemirror/addon/fold/comment-fold.js"></script>
+<script src="/assets/static/codemirror/mode/javascript/javascript.js"></script>
+<script src="/assets/static/codemirror/mode/xml/xml.js"></script>
+<script src="/assets/static/codemirror/mode/css/css.js"></script>
+<script src="/assets/static/codemirror/mode/htmlmixed/htmlmixed.js"></script>
+<script src="/assets/static/codemirror/mode/python/python.js"></script>
+<script src="/assets/static/codemirror/mode/markdown/markdown.js"></script>
+
+<!--layui-->
+<link rel="stylesheet" href="#{$static}/Assets/static/layui/css/layui.css">
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="#{$static}/Assets/css/bootstrap.min.css">
+<!-- Typography CSS -->
+<link rel="stylesheet" href="#{$static}/Assets/css/typography.css">
+<!-- Style CSS -->
+<link rel="stylesheet" href="#{$static}/Assets/css/style.css">
+<!-- Responsive CSS -->
+<link rel="stylesheet" href="#{$static}/Assets/css/responsive.css">
+
+<!--<link rel="stylesheet" href="#{$static}/Assets/bootstrap-table/css/bootstrap-table.css">-->
+
+<!-- System JavaScript -->
+<script src="#{$static}/Assets/static/layui/layui.js"></script>
+<!--<script src="/assets/static/acg.js?v=#{$app.version}"></script>-->
+<script src="#{$static}/Assets/js/ext.js?v=#{$app.version}"></script>
+<script src="/assets/user/user.js?v=#{$app.version}"></script>
+
+<script>
+    layui.config({
+        base: "#{$static}/Assets/static/modules/"
+    });
+</script>

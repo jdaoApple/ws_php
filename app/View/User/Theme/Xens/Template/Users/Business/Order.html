@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    #{include file="../../Common/Header.html"}
+    <style>
+        .more-table td {
+            border-width: 1px !important;
+            border-style: solid !important;
+            border-color: rgba(241, 195, 195, 0.27) !important;
+        }
+    </style>
+</head>
+<body>
+<!-- loader Start -->
+#{include file="../../Common/Loader.html"}
+<!-- loader END -->
+<!-- Wrapper Start -->
+<div class="wrapper">
+    <!-- Sidebar  -->
+    #{include file="../../Common/Sidebar.html"}
+    <!-- TOP Nav Bar -->
+    #{include file="../../Common/TopBar.html"}
+    <!-- TOP Nav Bar END -->
+    <!-- Responsive Breadcrumb End-->
+    <!-- Page Content  -->
+    <div id="content-page" class="content-page">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-3 col-lg-3">
+                    <div class="iq-card">
+                        <div class="iq-card-header d-flex justify-content-between">
+                            <div class="iq-header-title">
+                                <h4 class="card-title">订单查询</h4>
+                            </div>
+                        </div>
+                        <div class="iq-card-body">
+                            <form class="search-query"></form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-9 col-lg-9">
+                    <div class="iq-card">
+                        <div class="iq-card-header d-flex justify-content-between">
+                            <div class="iq-header-title">
+                                <h4 class="card-title">订单管理</h4>
+                            </div>
+                        </div>
+                        <div class="iq-card-body">
+                            <p>这是一个方便快捷的订单查询页,可以快速定位到您想要查找的订单哦~</p>
+                            <table id="orders"></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="display: none" class="more-modal">
+        <div style="padding: 10px;" class="more-table">
+            <table class="layui-table">
+                <tbody>
+                <tr>
+                    <td colspan="2" style="text-align: center;"><img src="[avatar]"
+                                                                     style="height: 80px;width:80px;border-radius: 100%;box-shadow: 1px 1px 10px 1px rgba(33,250,230,0.7);">
+                    </td>
+                </tr>
+                <tr>
+                    <td>下单用户</td>
+                    <td>[username]</td>
+                </tr>
+                <tr>
+                    <td>订单号</td>
+                    <td>[trade_no]</td>
+                </tr>
+                <tr>
+                    <td>金额</td>
+                    <td>[amount]</td>
+                </tr>
+                <tr>
+                    <td>商品</td>
+                    <td>[commodity]</td>
+                </tr>
+                <tr>
+                    <td>购卡数量</td>
+                    <td>[card_num]</td>
+                </tr>
+                <tr>
+                    <td>下单时间</td>
+                    <td>[create_time]</td>
+                </tr>
+                <tr>
+                    <td>下单设备</td>
+                    <td>[create_device]</td>
+                </tr>
+                <tr>
+                    <td>支付状态</td>
+                    <td>[status]</td>
+                </tr>
+                <tr>
+                    <td>支付时间</td>
+                    <td>[pay_time]</td>
+                </tr>
+                <tr>
+                    <td>发货状态</td>
+                    <td>[delivery_status]</td>
+                </tr>
+                <tr>
+                    <td>联系方式</td>
+                    <td>[contact]</td>
+                </tr>
+
+                <tr>
+                    <td>手续费</td>
+                    <td>[cost]</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!-- Wrapper END -->
+<!-- Footer -->
+#{include file="../../Common/Footer.html"}
+
+<script>
+    layui.define(['layer', 'hex'], function () {
+        var table = layui.table
+            , form = layui.form
+            , util = layui.util
+            , cao = layui.hex
+            , $ = layui.$;
+
+
+        let status = ['<span class="badge border border-warning text-warning">未支付</span>', '<span class="badge border border-success text-success">已支付</span>'];
+        let delivery_status = ['<span style="color: red;">未发货</span>', '<span  style="color: green;">已发货</span>'];
+        let delivery_way = ['<span style="color: green;">自动</span>', '<span style="color: red;">手动</span>'];
+        let create_device = [
+            'Windows',
+            'Android',
+            'IOS',
+            'iPad'
+        ];
+        let contactType = ["", "[手机]", "[邮箱]", "[QQ]"];
+
+        var tableIns = table.render({
+            elem: '#orders',
+            method: "post",
+            url: '/user/api/commodityOrder/data',
+            page: true, //开启分页
+            parseData: (res) => {
+                if (res.code === 200) {
+                    return {
+                        "code": 0,
+                        "msg": res.msg,
+                        "count": res.count,
+                        "data": res.data
+                    };
+                }
+            },
+            cols: [
+                [
+                    {
+                        field: 'trade_no', title: '订单号', width: 180, templet: function (item) {
+                            return '<span class="badge border border-primary text-primary">' + item.trade_no + '</span>';
+                        }
+                    },
+                    {
+                        field: 'commodity', title: '商品', templet: function (item) {
+                            if (!item.commodity) {
+                                return "-";
+                            }
+                            return item.commodity.name;
+                        }
+                    },
+                    {
+                        field: 'amount', title: '金额', templet: function (item) {
+                            return '<span class="badge badge-primary">¥ ' + item.amount + '</span>';
+                        }
+                    },
+                    {
+                        field: 'delivery_way', title: '发货方式', templet: function (item) {
+                            if (!item.commodity) {
+                                return "-";
+                            }
+                            return delivery_way[item.commodity.delivery_way];
+                        }
+                    },
+                    {
+                        field: 'create_time', title: '下单时间', width: 170
+                    },
+                    {
+                        field: 'status', title: '支付状态', templet: function (item) {
+                            return status[item.status];
+                        }
+                    },
+                    {
+                        field: 'delivery_status', width: 170, title: '发货状态', templet: function (item) {
+                            let html = delivery_status[item.delivery_status];
+                            if (item.status == 1) {
+                                html += (item.delivery_status == 0 && item.status == 1) ? " <a data-id='" + item.id + "' class='badge border border-primary text-primary delivery-card-a' style='cursor: pointer;'>发货</a>" : " <a data-id='" + item.id + "' class='badge border border-primary text-primary view-card-a' style='cursor: pointer;color: #0B7CC5;'>查看</a>";
+                            }
+                            return html;
+                        }
+                    },
+                    {
+                        title: '操作', width: 120, templet: function (res) {
+                            let html = `<div class="flex align-items-center list-user-action">`;
+                            html += `<a class="iq-bg-primary more" data-id="` + res.id + `" title="更多"  href="javascript:void(0)"><i class="ri-more-line"></i></a>`;
+                            html += `</div>`;
+                            return html;
+                        }
+                    },
+                ]
+            ],
+            done: (res) => {
+                table.render();
+                cao.setIdMap(res.data);
+
+                $('.view-card-a').click(function (){
+                    let map = cao.getMapItem($(this).attr('data-id'));
+
+                    layer.open({
+                        type: 1,
+                        title: "查看卡密",
+                        area: cao.isPc() ? ['420px', '420px'] : ['100%', '100%'],
+                        content: '<textarea class="layui-input" style="padding: 15px;height: 100%;">' + map.secret + '</textarea>',
+                        shadeClose: true
+                    });
+                });
+
+                $('.delivery-card-a').click(function (){
+                    let map = cao.getMapItem($(this).attr('data-id'));
+                    modal(map);
+                });
+
+                $('.more').click(function () {
+
+                    let map = cao.getMapItem($(this).attr('data-id'));
+                    let deliveryHtml = delivery_status[map.delivery_status];
+                    if (map.status == 1) {
+                        deliveryHtml += ((map.delivery_status == 0 && map.status == 1) ? " <a data-id='" + map.id + "' class='delivery-card' style='cursor: pointer;color: #0B7CC5;'>发货</a>" : " <a data-id='" + map.id + "' class='view-card' style='cursor: pointer;color: #0B7CC5;'>查看</a>");
+                    }
+                    layer.open({
+                        type: 1,
+                        title: '<i class="layui-icon">&#xe600;</i> MORE',
+                        content: $('.more-modal').html()
+                            .replace("[trade_no]", map.trade_no)
+                            .replace("[amount]", '<b style="color: green;">¥ ' + map.amount + '</b>')
+                            .replace("[commodity]", map.commodity.name)
+                            .replace("[card_num]", map.card_num)
+                            .replace("[create_time]", map.create_time)
+                            .replace("[status]", status[map.status])
+                            .replace("[delivery_status]", deliveryHtml)
+                            .replace("[contact]", map.contact)
+                            .replace("[avatar]", map.owner ? map.owner.avatar : '/favicon.ico')
+                            .replace("[username]", map.owner ? map.owner.username : '访客')
+                            .replace("[cost]", '<b style="color: #40b0de;">' + map.cost + '</b>')
+                            .replace("[create_device]", create_device[map.create_device])
+                            .replace("[pay_time]", map.pay_time ? map.pay_time : "-")
+                        ,
+                        area: cao.isPc() ? "420px" : ['100%', '100%'],
+                        shadeClose: true,
+                        success: () => {
+                            $('.delivery-card').click(function () {
+                                let mapItem = cao.getMapItem(this);
+                                modal(mapItem);
+                            });
+
+                            $('.view-card').click(function () {
+                                let map = cao.getMapItem(this);
+                                layer.open({
+                                    type: 1,
+                                    title: "查看卡密",
+                                    area: cao.isPc() ? ['420px', '420px'] : ['100%', '100%'],
+                                    content: '<textarea class="layui-input" style="padding: 15px;height: 100%;">' + map.secret + '</textarea>',
+                                    shadeClose: true
+                                });
+                            });
+                        }
+                    });
+                });
+            }
+        });
+
+
+        let modal = (values = {}) => {
+            cao.popup('/user/api/commodityOrder/delivery', [
+                {
+                    title: "发货内容",
+                    name: "secret",
+                    type: "textarea",
+                    placeholder: "手动发货的内容.."
+                }
+            ], res => {
+                table.bootstrapTable('refresh', {silent: true});
+                layer.closeAll();
+            }, values, "520px", false, "手动发货");
+        }
+
+
+        cao.query('.search-query', table, [
+            {title: "订单号", name: "equal-trade_no", type: "input", width: '100%;'},
+            {title: "商品ID", name: "equal-commodity_id", type: "input", width: 170},
+            {title: "卡密信息(模糊)", name: "search-secret", type: "input", width: 170},
+            {title: "联系方式", name: "equal-contact", type: "input", width: 170},
+            {
+                title: "支付状态", name: "equal-status", type: "select", dict: [
+                    {id: 0, name: "未支付"},
+                    {id: 1, name: "已支付"},
+                ], width: 170
+            },
+            {
+                title: "发货状态", name: "equal-delivery_status", type: "select", dict: [
+                    {id: 0, name: "未发货"},
+                    {id: 1, name: "已发货"},
+                ], width: 170
+            },
+            {title: "开始时间", name: "betweenStart-create_time", type: "date", width: 170},
+            {title: "结束时间", name: "betweenEnd-create_time", type: "date", width: 170},
+        ], true, false, (res) => {
+            tableIns.reload({
+                where: res,
+                page: {
+                    curr: 1
+                }
+            }, false);
+        });
+    });
+</script>
+</body>
+</html>

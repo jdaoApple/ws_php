@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    #{include file="../../Common/Header.html"}
+    <style>
+        .c-header {
+            height: 264px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            background: url("#{$static}/Assets/images/dashboard/bg.png") no-repeat 742px 100% #FFFFFF;
+        }
+
+        .c-header-avatar img {
+            width: 86px;
+            height: 86px;
+        }
+    </style>
+</head>
+<body>
+<!-- loader Start -->
+#{include file="../../Common/Loader.html"}
+<!-- loader END -->
+<!-- Wrapper Start -->
+<div class="wrapper">
+    <!-- Sidebar  -->
+    #{include file="../../Common/Sidebar.html"}
+    <!-- TOP Nav Bar -->
+    #{include file="../../Common/TopBar.html"}
+    <!-- TOP Nav Bar END -->
+    <!-- Responsive Breadcrumb End-->
+    <!-- Page Content  -->
+    <div id="content-page" class="content-page">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="c-header d-flex">
+                        <div class="c-header-avatar ml-5 pt-5">
+                            <img src="#{$user.avatar}" class="img-rounded rounded-circle mr-3" alt="user">
+                        </div>
+                        <div class="c-header-info ml-3 pt-5">
+                            <div class="font-size-30 text-primary">Hello！#{$user.username}，欢迎使用Marketing</div>
+                            <div class="font-size-20">
+                                请在网站上进行充值，告诉你可以在给你手动充值的都是骗子
+                            </div>
+                            <div class="font-size-20">
+                                若本网站出现问题或有其他服务需求，如实卡接码请直接联系客服飞机：<a href="https://t.me/yk01122" class="btn btn-primary"><i class="ri-wechat-line "></i>联系客服</a>
+                            </div>
+                            <div class="d-flex mt-4 font-size-18">
+                                <div>
+                                    <img src="#{$static}/Assets/images/dashboard/icon_1.png" width="22">
+                                    积分余额：#{$user.balance}
+                                </div>
+                                <div class="ml-3">
+                                    <img src="#{$static}/Assets/images/dashboard/icon_2.png" width="22">
+                                    日消耗积分：#{$trade}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="col-sm-12">
+                        <div class="iq-card iq-card-block iq-card-stretch iq-card-height">
+                            <div class="iq-card-body">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <h6>余额</h6>
+                                    <span class="iq-icon"></span>
+                                </div>
+                                <div class="iq-customer-box d-flex align-items-center justify-content-between mt-3">
+                                    <div class="d-flex align-items-center">
+                                        <div class="rounded-circle iq-card-icon iq-bg-primary mr-2"><i
+                                                class="ri-money-euro-circle-line"></i></div>
+                                        <h2><span class="counter">#{$user.balance}</span></h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="iq-card iq-card-block iq-card-stretch iq-card-height">
+                            <div class="iq-card-body">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <h6>硬币</h6>
+                                    <span class="iq-icon"></span>
+                                </div>
+                                <div class="iq-customer-box d-flex align-items-center justify-content-between mt-3">
+                                    <div class="d-flex align-items-center">
+                                        <div class="rounded-circle iq-card-icon iq-bg-danger mr-2"><i
+                                                class="ri-copper-diamond-line"></i></div>
+                                        <h2><span class="counter">#{$user.coin}</span></h2></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3">
+                    <div class="col-sm-12">
+                        <div class="iq-card iq-card-block iq-card-stretch iq-card-height">
+                            <div class="iq-card-body">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <h6>总充值</h6>
+                                    <span class="iq-icon"></span>
+                                </div>
+                                <div class="iq-customer-box d-flex align-items-center justify-content-between mt-3">
+                                    <div class="d-flex align-items-center">
+                                        <div class="rounded-circle iq-card-icon iq-bg-warning mr-2"><i
+                                                class="ri-money-euro-circle-line"></i></div>
+                                        <h2><span class="counter">#{$user.recharge}</span></h2>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="iq-card iq-card-block iq-card-stretch iq-card-height">
+                            <div class="iq-card-body">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <h6>总收入(硬币)</h6>
+                                    <span class="iq-icon"></span>
+                                </div>
+                                <div class="iq-customer-box d-flex align-items-center justify-content-between mt-3">
+                                    <div class="d-flex align-items-center">
+                                        <div class="rounded-circle iq-card-icon iq-bg-info mr-2"><i
+                                                class="ri-copper-diamond-line"></i></div>
+                                        <h2><span class="counter">#{$user.total_coin}</span></h2></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                #{if $user.businessLevel}
+                <div class="col-lg-3">
+                    <div class="col-sm-12">
+                        <div class="iq-card iq-card-block iq-card-stretch iq-card-height">
+                            <div class="iq-card-body">
+                                <div class="d-flex align-items-center justify-content-between text-right">
+                                    <div class="icon iq-icon-box rounded-circle bg-primary">
+                                        <i class="ri-wallet-3-line"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="mb-0">今日收入</h5>
+                                        <span class="h4 text-primary mb-0 counter d-inline-block w-100">#{$today_income}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="iq-card iq-card-block iq-card-stretch iq-card-height">
+                            <div class="iq-card-body">
+                                <div class="d-flex align-items-center justify-content-between text-right">
+                                    <div class="icon iq-icon-box rounded-circle bg-primary">
+                                        <i class="ri-wallet-3-line"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="mb-0">昨日收入</h5>
+                                        <span class="h4 text-primary mb-0 counter d-inline-block w-100">#{$yesterday_income}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="iq-card iq-card-block iq-card-stretch iq-card-height">
+                            <div class="iq-card-body">
+                                <div class="d-flex align-items-center justify-content-between text-right">
+                                    <div class="icon iq-icon-box rounded-circle bg-primary">
+                                        <i class="ri-wallet-3-line"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="mb-0">本周收入</h5>
+                                        <span class="h4 text-primary mb-0 counter d-inline-block w-100">#{$week_income}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="iq-card iq-card-block iq-card-stretch iq-card-height">
+                            <div class="iq-card-body">
+                                <div class="d-flex align-items-center justify-content-between text-right">
+                                    <div class="icon iq-icon-box rounded-circle bg-primary">
+                                        <i class="ri-wallet-3-line"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="mb-0">总交易</h5>
+                                        <span class="h4 text-primary mb-0 counter d-inline-block w-100">#{$trade}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                #{/if}
+                <div class="col-lg-6">
+                    <div class="iq-card iq-card-block iq-card-stretch iq-card-height">
+                        <div class="iq-card-header d-flex justify-content-between">
+                            <div class="iq-header-title">
+                                <h4 class="card-title">重要内容公告</h4>
+                            </div>
+                        </div>
+                        <div class="iq-card-body">
+                            #{$config.notice}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3" style="display: none;">
+                    <div class="iq-card iq-card-block iq-card-stretch iq-card-height">
+                        <div class="iq-card-header d-flex justify-content-between">
+                            <div class="iq-header-title">
+                                <h4 class="card-title">我的信息</h4>
+                            </div>
+                        </div>
+                        <div class="iq-card-body">
+                            <ul class="suggestions-lists m-0 p-0">
+                                <li class="d-flex mb-4 align-items-center">
+                                    #{if $user.login_ip != $user.last_login_ip}
+                                    <div class="profile-icon iq-bg-warning"><span><i
+                                            class="ri-map-pin-user-line"></i></span>
+                                    </div>
+                                    <div class="media-support-info ml-3">
+                                        <h6>登录IP地址</h6>
+                                        <p class="mb-0"><span class="text-warning">#{$user.login_ip}</span></p>
+                                    </div>
+                                    <div class="media-support-amount ml-3">
+                                        #{if $user.last_login_time}<h6 style="color: red"><b>异地登录</b></h6>#{else}<h6
+                                            style="color: #28d74d"><b>第一次登录</b></h6>#{/if}
+                                    </div>
+                                    #{else}
+                                    <div class="profile-icon iq-bg-success"><span><i
+                                            class="ri-map-pin-user-line"></i></span>
+                                    </div>
+                                    <div class="media-support-info ml-3">
+                                        <h6>登录IP地址</h6>
+                                        <p class="mb-0"><span class="text-success">#{$user.login_ip}</span></p>
+                                    </div>
+                                    <div class="media-support-amount ml-3">
+                                        <h6 style="color: #28d74d"><b>一切正常</b></h6>
+                                    </div>
+                                    #{/if}
+                                </li>
+                                <li class="d-flex mb-4 align-items-center">
+                                    <div class="profile-icon iq-bg-success"><span><i class="ri-time-line"></i></span>
+                                    </div>
+                                    <div class="media-support-info ml-3">
+                                        <h6>登录时间：</h6>
+                                        <p class="mb-0"><span class="text-success">#{$user.login_time}</span></p>
+                                    </div>
+                                    <div class="media-support-amount ml-3">
+                                        <h6 style="color: #28d74d"><b>一切正常</b></h6>
+                                    </div>
+                                </li>
+                                <li class="d-flex mb-4 align-items-center">
+                                    <div class="profile-icon iq-bg-success"><span><i class="ri-time-line"></i></span>
+                                    </div>
+                                    <div class="media-support-info ml-3">
+                                        <h6>上次登录时间：</h6>
+                                        <p class="mb-0"><span class="text-success">#{if $user.last_login_time}#{$user.last_login_time}#{else}-#{/if}</span>
+                                        </p>
+                                    </div>
+                                    <div class="media-support-amount ml-3">
+                                        <h6 style="color: #28d74d"><b>#{if
+                                            $user.last_login_time}一切正常#{else}第一次登录#{/if}</b></h6>
+                                    </div>
+                                </li>
+                                <li class="d-flex mb-4 align-items-center">
+                                    <div class="profile-icon iq-bg-success"><span><i class="ri-user-3-line"></i></span>
+                                    </div>
+                                    <div class="media-support-info ml-3">
+                                        <h6>商户ID：</h6>
+                                        <p class="mb-0"><span class="text-success">#{$user.id}</span></p>
+                                    </div>
+                                </li>
+                                <li class="d-flex mb-4 align-items-center">
+                                    <div class="profile-icon iq-bg-warning"><span><i class="ri-key-line"></i></span>
+                                    </div>
+                                    <div class="media-support-info ml-3">
+                                        <h6>商户密钥(请勿泄露)</h6>
+                                        <p class="mb-0"><span class="text-warning app-key">#{$user.app_key}</span></p>
+                                    </div>
+                                    <div class="media-support-amount ml-3">
+                                        <a class="mb-0 reset-key" href="javascript:void(0);">重置密钥</a>
+                                    </div>
+                                </li>
+                                <li class="d-flex mb-4 align-items-center">
+                                    <div class="profile-icon iq-bg-success"><span><i class="ri-links-line"></i></span>
+                                    </div>
+                                    <div class="media-support-info ml-3">
+                                        <h6>推广链接</h6>
+                                        <p class="mb-0"><span class="text-success">#{$share_url}</span></p>
+                                    </div>
+                                    <div class="media-support-amount ml-3">
+                                        <h6><span class="text-secondary">已推广至</span><b style="color: #0bb358">
+                                            #{$children} </b>人</h6>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Wrapper END -->
+<!-- Footer -->
+#{include file="../../Common/Footer.html"}
+
+<script>
+    layui.define(['layer'], function () {
+        $('.clipboard').click(function () {
+            var clipboard = new ClipboardJS(".clipboard");
+            clipboard.on('success', function (e) {
+                layer.msg("推广链接已经复制成功了，赶快发给好友吧！")
+            });
+        });
+
+        $('.reset-key').click(function () {
+            layer.confirm('您真的要重置您的商户密钥吗？这是无法恢复的操作。', {
+                btn: ['立即重置', '取消'],
+                title: "重置密钥"
+            }, function () {
+                $.post('/user/api/security/resetKey', res => {
+                    layer.msg(res.msg);
+                    if (res.code == 200) {
+                        $('.app-key').html(res.data.app_key);
+                    }
+                });
+            });
+        });
+    });
+
+</script>
+</body>
+</html>

@@ -1,0 +1,189 @@
+<!-- Sidebar  -->
+<div class="iq-sidebar">
+    <div class="iq-sidebar-logo d-flex justify-content-between">
+        <a href="#">
+            <img src="#{$favicon}" class="img-fluid" alt="">
+            <span>外贸营销</span>
+        </a>
+        <div class="iq-menu-bt-sidebar">
+            <div class="iq-menu-bt align-self-center">
+                <div class="wrapper-menu">
+                    <div class="main-circle"><i class="ri-arrow-left-s-line"></i></div>
+                    <div class="hover-circle"><i class="ri-arrow-right-s-line"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="sidebar-scrollbar">
+        <nav class="iq-sidebar-menu">
+            <ul id="iq-sidebar-toggle" class="iq-menu">
+
+                <li class="#{if getLocalRouter() == '/user/index/index'} active #{/if}">
+                    <a href="/user/index/index" class="iq-waves-effect">
+                        <i class="ri-home-4-line"></i>
+                        <span>我的主页</span>
+                    </a>
+                </li>
+                <li class="iq-menu-title">
+                    <i class="ri-subtract-line"></i>
+                    <span>商品平台</span>
+                </li>
+                <li class="#{if getLocalRouter() == '/user/account/index'}active#{/if}">
+                    <a href="/user/account/index" class="iq-waves-effect">
+                        <i class="ri-message-2-line"></i>
+                        <span>Apple ID/Google/小火箭</span>
+                    </a>
+                </li>
+                #{foreach $category as $item}
+                #{if $item['id'] == 2}
+                <li class="#{if getLocalRouter() == '/user/account/cloud'}active#{/if}">
+                    <a href="/user/account/cloud" class="iq-waves-effect">
+                        <i class="ri-whatsapp-line"></i>
+                        <span>#{$item['name']}</span>
+                    </a>
+                </li>
+                #{/if}
+                #{/foreach}
+                #{foreach $category as $item}
+                #{if $item['id'] == 3}
+                <li class="#{if getLocalRouter() == '/user/account/simulator'}active#{/if}">
+                    <a href="/user/account/simulator" class="iq-waves-effect">
+                        <i class="ri-phone-line"></i>
+                        <span>#{$item['name']}</span>
+                    </a>
+                </li>
+                #{/if}
+                #{/foreach}
+                #{foreach $category as $item}
+                #{if $item['id'] == 4}
+                <li class="#{if getLocalRouter() == '/user/account/directLogin'}active#{/if}">
+                    <a href="/user/account/directLogin" class="iq-waves-effect">
+                        <i class="ri-sim-card-2-line"></i>
+                        <span>#{$item['name']}</span>
+                    </a>
+                </li>
+                #{/if}
+                #{/foreach}
+                #{foreach $category as $item}
+                #{if $item['id'] == 5}
+                <li class="#{if getLocalRouter() == '/user/account/channel'}active#{/if}">
+                    <a href="/user/account/channel" class="iq-waves-effect">
+                        <i class="ri-whatsapp-line"></i>
+                        <span>#{$item['name']}</span>
+                    </a>
+                </li>
+                #{/if}
+                #{/foreach}
+                <li class="#{if getLocalRouter() == '/user/account/socialize'}active#{/if}">
+                    <a href="/user/account/socialize" class="iq-waves-effect">
+                        <i class="ri-facebook-box-line"></i>
+                        <span>海外社交软件</span>
+                    </a>
+                </li>
+                <li class="#{if $title=='购买记录'} active #{/if}">
+                    <a href="/user/personal/purchaseRecord" class="iq-waves-effect">
+                        <i class="ri-shopping-cart-line"></i>
+                        <span>订单记录</span>
+                    </a>
+                </li>
+                <li class="iq-menu-title">
+                    <i class="ri-subtract-line"></i>
+                    <span>筛选工作台</span>
+                </li>
+                <li class="#{if getLocalRouter() == '/user/filtering/whatsApp'}active#{/if}">
+                    <a href="/user/filtering/whatsApp" class="iq-waves-effect">
+                        <i class="ri-whatsapp-fill"></i>
+                        <span>WhatsApp筛选</span>
+                    </a>
+                </li>
+                <li class="#{if getLocalRouter() == '/user/filtering/telegram'}active#{/if}">
+                    <a href="/user/filtering/telegram" class="iq-waves-effect">
+                        <i class="ri-telegram-fill"></i>
+                        <span>Telegram筛选</span>
+                    </a>
+                </li>
+
+                <li class="iq-menu-title">
+                    <i class="ri-subtract-line"></i>
+                    <span>账户中心</span>
+                </li>
+                <li class="#{if $title=='充值中心'} active #{/if}">
+                    <a href="/user/recharge/index" class="iq-waves-effect">
+                        <i class="ri-wallet-3-line"></i>
+                        <span>充值中心</span>
+                    </a>
+                </li>
+
+<!--                <li class="#{if $title=='硬币兑现'} active #{/if}">-->
+<!--                    <a href="/user/cash/index" class="iq-waves-effect">-->
+<!--                        <i class="ri-copper-coin-line"></i>-->
+<!--                        <span>硬币兑现</span>-->
+<!--                    </a>-->
+<!--                </li>-->
+                <li class="#{if $title=='我的下级'} active #{/if}">
+                    <a href="/user/agent/member" class="iq-waves-effect">
+                        <i class="ri-user-star-fill"></i>
+                        <span>我的下级</span>
+                    </a>
+                </li>
+                <li class="#{if $title=='我的账单'} active #{/if}">
+                    <a href="/user/bill/index" class="iq-waves-effect">
+                        <i class="ri-bill-line"></i>
+                        <span>我的账单</span>
+                    </a>
+                </li>
+                <li class="#{if $title=='个人资料'} active #{/if}">
+                    <a href="/user/security/personal" class="iq-waves-effect">
+                        <i class="ri-shield-line"></i>
+                        <span>安全中心</span>
+                    </a>
+                </li>
+
+                <li class="iq-menu-title" style="display: none">
+                    <i class="ri-subtract-line"></i>
+                    <span>店铺管理</span>
+                </li>
+                <li class="#{if $title=='我的店铺'} active #{/if}" style="display: none">
+                    <a href="/user/business/index" class="iq-waves-effect">
+                        <i class="ri-apps-fill"></i>
+                        <span>我的店铺 #{if $user.businessLevel}#{if !\App\Util\Client::isMobile()} <p class="badge badge-success">#{$user.businessLevel.name}</p>#{else}(#{$user.businessLevel.name})#{/if} #{/if}</span>
+                    </a>
+                </li>
+
+                #{if $user.businessLevel and $user.businessLevel.supplier == 1}
+                <li class="#{if $title=='商品分类'} active #{/if}">
+                    <a href="/user/category/index" class="iq-waves-effect">
+                        <i class="ri-price-tag-3-line"></i>
+                        <span>商品分类</span>
+                    </a>
+                </li>
+                <li class="#{if $title=='我的商品'} active #{/if}">
+                    <a href="/user/commodity/index" class="iq-waves-effect">
+                        <i class="ri-store-2-line"></i>
+                        <span>我的商品</span>
+                    </a>
+                </li>
+                <li class="#{if $title=='卡密管理'} active #{/if}">
+                    <a href="/user/card/index" class="iq-waves-effect">
+                        <i class="ri-key-2-line"></i>
+                        <span>卡密管理</span>
+                    </a>
+                </li>
+                <li class="#{if $title=='代卷管理'} active #{/if}">
+                    <a href="/user/coupon/index" class="iq-waves-effect">
+                        <i class="ri-coupon-3-line"></i>
+                        <span>代卷管理</span>
+                    </a>
+                </li>
+                <li class="#{if $title=='商品订单'} active #{/if}">
+                    <a href="/user/order/index" class="iq-waves-effect">
+                        <i class="ri-shopping-cart-2-line"></i>
+                        <span>商品订单</span>
+                    </a>
+                </li>
+                #{/if}
+            </ul>
+        </nav>
+        <div class="p-3"></div>
+    </div>
+</div>

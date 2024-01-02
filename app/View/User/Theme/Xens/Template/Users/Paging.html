@@ -1,0 +1,9 @@
+#{if $user}
+    #{if $smarty.get.id != 0 || $commodityId != 0}
+        #{include file="./Shop/Commodity.html"}
+    #{else}
+        #{include file="./Dashboard/Index.html"}
+    #{/if}
+#{else}
+    #{include file="./Home/Index.html"}
+#{/if}

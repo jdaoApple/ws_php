@@ -1,0 +1,112 @@
+<!-- TOP Nav Bar -->
+<div class="iq-top-navbar">
+    <div class="iq-navbar-custom">
+        <div class="iq-sidebar-logo">
+            <div class="top-logo">
+                <a href="#" class="logo">
+                    <img src="#{$static}/Assets/images/logo.gif" class="img-fluid" alt="">
+                    <span>Xens</span>
+                </a>
+            </div>
+        </div>
+        <nav class="navbar navbar-expand-lg navbar-light p-0">
+            <div class="navbar-left">
+                <ul id="topbar-data-icon" class="d-flex p-0 topbar-menu-icon">
+                    <li class="nav-item">
+                        <a href="/user/index/index" class="nav-link font-weight-bold search-box-toggle"><i
+                                class="ri-home-4-line"></i></a>
+                    </li>
+                    <li><a href="/user/recharge/index" class="nav-link"><i class="ri-wallet-3-line"></i></a></li>
+                    <li><a href="/user/personal/purchaseRecord" class="nav-link"><i
+                            class="ri-shopping-cart-fill"></i></a></li>
+                    <li><a href="/user/bill/index" class="nav-link"><i class="ri-bill-line"></i></a></li>
+                    <li><a href="/user/agent/member" class="nav-link"><i class="ri-user-star-fill"></i></a></li>
+                    <li><a href="/user/security/personal" class="nav-link"><i class="ri-shield-line"></i></a></li>
+                </ul>
+                <div class="iq-search-bar">
+                    <form action="/user/index/index" class="searchbox">
+                        <input type="text" name="search" class="text search-input" placeholder="搜索商品">
+                        <a class="search-link" href="#"><i class="ri-search-line"></i></a>
+                    </form>
+                </div>
+            </div>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-label="Toggle navigation">
+                <i class="ri-menu-3-line"></i>
+            </button>
+            <div class="iq-menu-bt align-self-center">
+                <div class="wrapper-menu">
+                    <div class="main-circle"><i class="ri-arrow-left-s-line"></i></div>
+                    <div class="hover-circle"><i class="ri-arrow-right-s-line"></i></div>
+                </div>
+            </div>
+            <div class="collapse navbar-collapse">
+                <!--        <ul class="navbar-nav ml-auto navbar-list">-->
+
+                <!--          <li class="nav-item dropdown">-->
+                <!--            <a href="#" class="search-toggle iq-waves-effect">-->
+                <!--              <div id="lottie-mail"></div>-->
+                <!--              <span class="bg-primary count-mail"></span>-->
+                <!--            </a>-->
+                <!--            <div class="iq-sub-dropdown">-->
+                <!--              <div class="iq-card shadow-none m-0">-->
+                <!--                <div class="iq-card-body p-0 ">-->
+                <!--                  <div class="bg-primary p-3">-->
+                <!--                    <h5 class="mb-0 text-white">All Messages<small class="badge  badge-light float-right pt-1">1</small></h5>-->
+                <!--                  </div>-->
+                <!--                  <a href="#" class="iq-sub-card" >-->
+                <!--                    <div class="media align-items-center">-->
+                <!--                      <div class="">-->
+                <!--                        <img class="avatar-40 rounded" src="#{$static}/Assets/images/user/01.jpg" alt="">-->
+                <!--                      </div>-->
+                <!--                      <div class="media-body ml-3">-->
+                <!--                        <h6 class="mb-0 ">Nik Emma Watson</h6>-->
+                <!--                        <small class="float-left font-size-12">13 Jun</small>-->
+                <!--                      </div>-->
+                <!--                    </div>-->
+                <!--                  </a>-->
+                <!--                </div>-->
+                <!--              </div>-->
+                <!--            </div>-->
+                <!--          </li>-->
+                <!--        </ul>-->
+            </div>
+            <ul class="navbar-list">
+                <li>
+                    <a href="#" class="search-toggle iq-waves-effect d-flex align-items-center bg-primary rounded">
+                        <img src="#{$user.avatar}" class="img-fluid rounded mr-3" alt="user">
+                        <div class="caption">
+                            <h6 class="mb-0 line-height text-white">#{$user.username}</h6>
+                            <span class="font-size-12 text-white">#{$user.group.name}</span>
+                        </div>
+                    </a>
+                    <div class="iq-sub-dropdown iq-user-dropdown">
+                        <div class="iq-card shadow-none m-0">
+                            <div class="iq-card-body p-0 ">
+                                <div class="bg-primary p-3">
+                                    <h5 class="mb-0 text-white line-height">欢迎,#{$user.username}</h5>
+                                    <span class="text-white font-size-12">#{$user.group.name}</span>
+                                </div>
+                                <a href="/user/security/personal" class="iq-sub-card iq-bg-primary-hover">
+                                    <div class="media align-items-center">
+                                        <div class="rounded iq-card-icon iq-bg-primary">
+                                            <i class="ri-file-user-line"></i>
+                                        </div>
+                                        <div class="media-body ml-3">
+                                            <h6 class="mb-0 ">我的资料</h6>
+                                            <p class="mb-0 font-size-12">在这游览/修改您的基本资料.</p>
+                                        </div>
+                                    </div>
+                                </a>
+                                <div class="d-inline-block w-100 text-center p-3">
+                                    <a class="bg-primary iq-sign-btn logout" href="javascript:void(0);" role="button">退出登录<i class="ri-login-box-line ml-2"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+<!-- TOP Nav Bar END -->

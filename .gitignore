@@ -1,0 +1,15 @@
+.idea
+composer.lock
+/runtime/
+/.settings/
+/composer.lock
+/.buildpath
+/.project
+*.log
+.vscode
+*/.DS_Store
+/public/uploads/
+/public/wechat/
+/vendor/
+/thinkphp/
+/config/database.php

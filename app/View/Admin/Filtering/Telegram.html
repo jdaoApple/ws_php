@@ -1,0 +1,248 @@
+#{include file="../Header.html"}
+
+<!--begin::Content-->
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+  <!--begin::Toolbar-->
+  #{include file="../Toolbar.html"}
+  <!--end::Toolbar-->
+  <!--begin::Post-->
+  <div class="post d-flex flex-column-fluid" id="kt_post">
+    <!--begin::Container-->
+    <div id="kt_content_container" class="container-fluid">
+      <!--begin::Row-->
+      <div class="row g-5 g-xl-10">
+        <div class="col-xl-3">
+          <!--begin::Statistics Widget 1-->
+          <div class="card bgi-no-repeat card-xl-stretch mb-xl-8"
+               style="background-position: right top; background-size: 30% auto; background-image: url(/assets/admin/images/svg/shapes/abstract-4.svg)">
+            <!--begin::Body-->
+            <div class="card-body">
+              <span class="card-title fw-bolder text-muted text-hover-primary fs-4">订单数量</span>
+              <div class="fw-bolder fs-1 text-primary my-6 order_count">...</div>
+            </div>
+            <!--end::Body-->
+          </div>
+          <!--end::Statistics Widget 1-->
+        </div>
+        <div class="col-xl-3">
+          <!--begin::Statistics Widget 1-->
+          <div class="card bgi-no-repeat card-xl-stretch mb-xl-8"
+               style="background-position: right top; background-size: 30% auto; background-image: url(/assets/admin/images/svg/shapes/abstract-4.svg)">
+            <!--begin::Body-->
+            <div class="card-body">
+              <span class="card-title fw-bolder text-muted text-hover-primary fs-4">订单积分</span>
+              <div class="fw-bolder fs-1 text-success my-6 order_amount">...</div>
+            </div>
+            <!--end::Body-->
+          </div>
+          <!--end::Statistics Widget 1-->
+        </div>
+      </div>
+      <!--end::Row-->
+
+      <!--begin::Tables Widget 9-->
+      <div class="card mb-5 mb-xl-8">
+        <!--begin::Header-->
+        <div class="card-header border-0 pt-5">
+          <div class="card-toolbar">
+            <button class="btn btn-sm btn-light-primary refresh me-3"><i class="fab fa-edge"></i>
+              一键更新状态
+            </button>
+            <span class="badge badge-light-primary fs-8">Tips：上方订单数据显示会根据下方的查询条件进行筛选显示。</span>
+          </div>
+        </div>
+        <!--end::Header-->
+
+        <div class="card-body py-3">
+          <form class="search-query"></form>
+          <table id="order" lay-filter="order"></table>
+        </div>
+      </div>
+
+      <!--end::Tables Widget 9-->
+    </div>
+    <!--end::Container-->
+  </div>
+  <!--end::Post-->
+</div>
+<!--end::Content-->
+
+<script>
+
+  $(function () {
+    layui.use(['hex', 'form'], function () {
+      let table = $("#order");
+      let cao = layui.hex;
+      let queryParams = null;
+      table.bootstrapTable({
+        url: '/admin/api/filtering/data',//请求的url地址
+        method: "post",//请求方式
+        // striped:true,//是否显示行间隔色
+        pageSize: 13,//每页显示的数量
+        pageList: [13, 25, 50, 100],
+        showRefresh: false,//是否显示刷新按钮
+        cache: false,//是否使用缓存
+        showToggle: false,//是否显示详细视图和列表视图的切换按钮
+        cardView: false,
+        pagination: true,//是否显示分页
+        pageNumber: 1,//初始化显示第几页，默认第1页
+        singleSelect: false,//复选框只能选择一条记录
+        sidePagination: 'server',//分页显示方式，可以选择客户端和服务端（server|client）
+        contentType: "application/x-www-form-urlencoded",//使用post请求时必须加上
+        dataType: "json",//接收的数据类型
+        queryParamsType: 'limit',//参数格式，发送标准的Restful类型的请求
+        queryParams: function (params) {
+          params.page = (params.offset / params.limit) + 1;
+          params['equal-mode'] = 'TG';
+          if (queryParams) {
+            for (const key in params) {
+              queryParams[key] = params[key];
+            }
+          } else {
+            queryParams = params;
+          }
+          return queryParams;
+        },
+        //回调函数
+        responseHandler: function (res) {
+          $('.order_count').html(res.order_count);
+          $('.order_amount').html(res.order_amount);
+          $('.order_cost').html(res.order_cost);
+
+          return {
+            "total": res.count,
+            "rows": res.data
+          }
+        },
+        columns: [
+          {
+            field: 'id', title: '序号', formatter: function (val, item) {
+              return '<span class="badge badge-light">' + item.id + '</span>';
+            }
+          },
+          {
+            field: 'user', title: '会员', formatter: function (val, item) {
+              if (!item.user) {
+                return '-';
+              }
+              return '<span class="badge badge-light-dark user" style="cursor: pointer;" ><img src="' + item.user.avatar + '"  style="width: 18px;border-radius: 100%;"/> ' + item.user.username + '(' + item.user.id + ')</span>'
+            },
+            events: {
+              'click .user': function (event, value, row, index) {
+                $("input[name='equal-userId']").val(row.user.id);
+                table.bootstrapTable('refresh', {
+                  silent: true,
+                  pageNumber: 1,
+                  query: {"equal-userId": row.user.id}
+                });
+              }
+            }
+          },
+          {
+            field: 'title', title: '描述', formatter: function (val, item) {
+              return item.title;
+            }
+          },
+          {
+            field: 'taskTotal', title: '进度/总数', formatter: function (val, item) {
+              return `<span style="color: #0C84D1;">${item.taskProgress}/${val}</span>`;
+            }
+          },
+          {
+            field: 'taskState', title: '任务状态', formatter: function (val, item) {
+              return val;
+            }
+          },
+          {
+            field: 'money', title: '扣费金额', formatter: function (val, item) {
+              return val;
+            }
+          },
+          {
+            field: 'taskState', title: '任务状态', formatter: function (val, item) {
+              return val;
+            }
+          },
+          {
+            field: 'create_time', title: '创建时间', formatter: function (val, item) {
+              return '<span class="text-secondary">' + val + '</span>';
+            }, width: 170
+          },
+          {
+            field: 'update_time', title: '更新时间', formatter: function (val, item) {
+              return '<span class="text-secondary">' + val + '</span>';
+            }, width: 170
+          },
+          {
+            field: 'restart',
+            title: '更新数据',
+            width: 100,
+            formatter: function (val, item) {
+              return `<div class="d-flex restart" data-id="${item.id}" style="cursor: pointer"><div class="text-primary"> <i class="fas fa-undo"></i>更新状态</div>`;
+            },
+            events: {
+              'click .restart': function (event, value, row, index) {
+                layer.confirm('您确认要更新当前数据状态吗？', {
+                  btn: ['确认', '取消']
+                }, function () {
+
+                  let loaderIndex = layer.load(2, {shade: ['0.3', '#fff']});
+                  $.post("/admin/api/filtering/restart", {id: row.id}, res => {
+                    layer.close(loaderIndex);
+                    layer.msg(res.msg);
+                    table.bootstrapTable('refresh', {silent: true});
+                  });
+                });
+              }
+            }
+          },
+          {
+            field: 'operate',
+            title: '下载数据',
+            width: 100,
+            formatter: function (val, item) {
+              return `<div class="d-flex ml-2 download" data-id="${item.id}" style="cursor: pointer"><div class="text-primary"> <i class="fas fa-download"></i>下载结果</div>`;
+            },
+            events: {
+              'click .download': function (event, value, row, index) {
+                let taskResultUrl = row.taskResultUrl;
+                if (taskResultUrl == '') {
+                  layer.msg('任务还没有完成');
+                } else {
+                  window.open(taskResultUrl)
+                }
+              }
+            }
+          }
+        ]
+      });
+
+      cao.query('.search-query', table, [
+        {title: "会员ID", name: "equal-userId", type: "input"},
+        {title: "描述信息", name: "equal-title", type: "input"},
+        {title: "ID", name: "equal-id", type: "input"},
+        {
+          title: "任务状态", name: "equal-taskState", type: "select", dict: [
+            {id: 'Close', name: "关闭"},
+            {id: 'Finish', name: "完成"},
+            {id: 'Ongoing', name: "正在进行"},
+            {id: 'Waiting', name: "等待"},
+          ]
+        },
+      ], true, false);
+
+      $('.refresh').click(() => {
+        let loaderIndex = layer.load(2, {shade: ['0.3', '#fff']});
+        $.post("/admin/api/filtering/refresh", {mode: 'TG'}, res => {
+          layer.close(loaderIndex);
+          layer.msg(res.msg);
+          table.bootstrapTable('refresh', {silent: false});
+        });
+      });
+    });
+  });
+</script>
+<!--start::HOOK-->
+#{hook(\App\Consts\Hook::ADMIN_VIEW_ORDER_FOOTER)}
+<!--end::HOOK-->
+#{include file="../Footer.html"}

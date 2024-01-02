@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    #{include file="../../Common/Header.html"}
+</head>
+<body>
+<!-- loader Start -->
+#{include file="../../Common/Loader.html"}
+<!-- loader END -->
+<!-- Wrapper Start -->
+<div class="wrapper">
+    <!-- Sidebar  -->
+    #{include file="../../Common/Sidebar.html"}
+    <!-- TOP Nav Bar -->
+    #{include file="../../Common/TopBar.html"}
+    <!-- TOP Nav Bar END -->
+    <!-- Responsive Breadcrumb End-->
+    <!-- Page Content  -->
+    <div id="content-page" class="content-page">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="iq-card">
+                        <div class="iq-card-body">
+                            <div class="user-detail text-center">
+                                <div class="user-profile">
+                                    <img src="" loading="lazy" class="avatar-130 img-fluid cover"
+                                         style="border-radius:70px;">
+                                </div>
+                                <div class="profile-detail mt-3">
+                                    <h3 class="d-inline-block commodity_name"></h3>
+                                    <h5 class="mb-0">
+                                        <span class="price">0</span>
+                                    </h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="iq-card">
+                        <div class="iq-card-body">
+                            <div class="row">
+                                <div class="col-sm-12 product-description-details">
+                                    <div>
+                                        <ul class="nav nav-tabs justify-content-center" id="myTab-2" role="tablist">
+                                            <li class="nav-item">
+                                                <a class="nav-link active" id="orders-tab-shop"
+                                                   data-toggle="tab" href="#order-shop" role="tab"
+                                                   aria-selected="true">订单选购</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" id="description-tab-justify"
+                                                   data-toggle="tab" href="#description" role="tab"
+                                                   aria-selected="false">商品介绍</a>
+                                            </li>
+                                        </ul>
+                                        <div class="tab-content" id="myTabContent-1">
+                                            <div class="tab-pane fade show active" id="order-shop" role="tabpanel"
+                                                 aria-labelledby="orders-tab-shop">
+                                                <div class="col-lg-12">
+                                                    <div class="commodity-form commodity-di">
+                                                        <style>
+                                                            .acg-input {
+                                                                border: 1px solid var(--iq-dark-border);
+                                                                /*display: block;*/
+                                                                /*width: 100%;*/
+                                                                height: calc(1.5em + 0.75rem + 2px);
+                                                                padding: 0.375rem 0.75rem;
+                                                                font-size: 1rem;
+                                                                font-weight: 400;
+                                                                line-height: 1.5;
+                                                                color: #495057;
+                                                                background-color: #fff;
+                                                                background-clip: padding-box;
+                                                                border-radius: 0.25rem;
+                                                                transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+                                                            }
+                                                        </style>
+                                                        <form class="commodity-form">
+                                                            <p class="general">商品单价：<span class="price">0</span></p>
+                                                            <p class="general">发货方式：<span class="delivery_way"></span>
+                                                            </p>
+                                                            <p class="general">联系方式：<input class="acg-input contact"
+                                                                                           type="text" name="contact"
+                                                                                           placeholder="请输入联系方式">
+                                                            </p>
+                                                            <p class="password general">查询密码：<input class="acg-input"
+                                                                                                    type="text"
+                                                                                                    name="password"
+                                                                                                    placeholder="请设置查询密码">
+                                                            </p>
+                                                            <p class="widget general"></p>
+                                                            <p class="coupon general">优惠代卷：<input class="acg-input"
+                                                                                                  type="text"
+                                                                                                  name="coupon"
+                                                                                                  placeholder="没有可不填写"
+                                                                                                  onchange="acg.API.tradeAmountPerform('.trade_amount')">
+                                                            </p>
+                                                            <p class="general race-view">选择种类：</p>
+                                                            <p class="general">购买数量：
+                                                                <input class="acg-input purchase_num" type="number"
+                                                                       name="num" value="#{$number|default:1}"
+                                                                       onchange="acg.API.tradeAmountPerform('.trade_amount')">
+                                                            </p>
+                                                            <p class="general captcha_status">人机验证：<input
+                                                                    class="acg-input captcha-input" name="captcha"
+                                                                    type="text" placeholder="请输入验证码"> <img
+                                                                    class="captcha"></p>
+                                                            <p class="purchase_count general"></p>
+                                                            <p class="general">售前客服：
+                                                                <a target="_blank" class="qq-service"><i
+                                                                        class="fa fa-qq"></i> QQ客服</a> | <a
+                                                                        target="_blank" class="web-service"><i
+                                                                        class="fa fa-user-plus"></i> 网页客服</a></p>
+                                                            <p class="lot"></p>
+                                                            <p class="draft_status"></p>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane fade" id="description" role="tabpanel"
+                                                 aria-labelledby="description-tab-justify">
+                                                <p class="description"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="iq-card">
+                        <div class="iq-card-body">
+                            <p>商品购买</p>
+                            <div class="d-flex justify-content-between">
+                                <span class="commodity_name"></span>
+                                <span><a href="javascript:void(0);" class="share_url"><strong>立即分享</strong></a></span>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span class="seckill">限时秒杀</span>
+                                <span class="seckill"><a href="javascript:void(0);"><strong
+                                        class="seckill_timer"></strong></a></span>
+                            </div>
+                            <hr>
+                            <p><b>商品价目表</b></p>
+                            <div class="d-flex justify-content-between">
+                                <span>商品单价</span>
+                                <span class="text-success price">$0</span>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span>商品库存</span>
+                                <span class="text-warning card_count">0</span>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span>金额优惠</span>
+                                <span class="discount">$0</span>
+                            </div>
+                            <hr>
+                            <p><b>支付方式</b></p>
+                            <ul class="list-inline p-0 m-0 pay_list"></ul>
+                            <hr>
+                            <div class="d-flex justify-content-between">
+                                <span class="text-dark"><strong>发货方式</strong></span>
+                                <span class="text-success"><strong class="delivery_way"></strong></span>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span class="text-dark"><strong>订单金额</strong></span>
+                                <span class="text-warning"><strong class="trade_amount"></strong></span>
+                            </div>
+                            <a href="javascript:void(0);" class="btn btn-primary d-block mt-1 trade">确定购买</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Wrapper END -->
+<!-- Footer -->
+#{include file="../../Common/Footer.html"}
+
+<script>
+    let commodityIds = 0;
+
+    let getId = "#{$smarty.get.id}";
+    let commodityId = "#{$commodityId}";
+
+    commodityIds = commodityId == 0 ? getId : commodityId;
+
+    let payId = 0;
+
+    function payClick(obj, id) {
+        $('.border-primary').removeClass('border-primary');
+        $(obj).addClass('border-primary');
+        payId = id;
+    }
+
+    acg.ready("#{$from}", () => {
+
+        $('.trade').click(function () {
+            if (payId == 0) {
+                layer.msg('请选择一个支付方式');
+                return;
+            }
+            acg.API.tradePerform(payId);
+        });
+        //初始化支付
+        acg.API.pay({
+            success: item => {
+                if (item.handle === "#system") {
+                    #{if $user}
+                    let html = `<li class="d-flex mb-3 align-items-center p-3 sell-list bg-white rounded" onclick="payClick(this,` + item.id + `)">
+                                    <div class="user-img img-fluid">
+                                        <img src="` + item.icon + `" loading="lazy" alt="story-img" class="img-fluid rounded-circle avatar-40">
+                                    </div>
+
+                                    <div class="media-support-info ml-3">
+                                        <h6>` + item.name + `(#{sprintf("%.2f", $user.balance)})</a></h6>
+                                    </div>
+                                    <div class="iq-card-header-toolbar d-flex align-items-center">
+                                        <div class="badge badge-pill badge-primary">System</div>
+                                    </div>
+                                </li>`;
+                    // $('.pay_list').append(' <a class="pay-button" onclick="acg.API.tradePerform(' + item.id + ')" style="line-height: 22px;color: #ffffff;background:#e5b9b9b0;"> <img src="' + item.icon + '">' + item.name + '(#{sprintf("%.2f", $user.balance)})</a>');
+                    $('.pay_list').append(html);
+                    #{/if}
+                } else {
+
+                    let html = `<li class="d-flex mb-3 align-items-center p-3 sell-list bg-white rounded" onclick="payClick(this,` + item.id + `)">
+                                    <div class="user-img img-fluid">
+                                        <img src="` + item.icon + `" loading="lazy" class="img-fluid rounded-circle avatar-40">
+                                    </div>
+                                    <div class="media-support-info ml-3">
+                                        <h6>` + item.name + `</a></h6>
+                                    </div>
+                                    <div class="iq-card-header-toolbar d-flex align-items-center">
+                                        <div class="badge badge-pill badge-primary">` + item.handle + `</div>
+                                    </div>
+                                </li>`;
+
+                    // $('.pay_list').append(' <a class="pay-button" onclick="acg.API.tradePerform(' + item.id + ')" style="line-height: 22px;"><img src="' + item.icon + '"> ' + item.name + '</a>');
+                    $('.pay_list').append(html);
+                }
+            }
+        });
+
+        let wholesale_html = '';
+
+        acg.API.commodity({
+            commodityId: commodityIds,
+            auto: {
+                name: '.commodity_name',
+                // share_url: '.share_url',
+                description: '.description',
+                delivery_way: '.delivery_way',
+                contact_type: '.contact',
+                coupon: '.coupon',
+                purchase_num: '.purchase_num',
+                captcha: '.captcha',
+                password_status: '.password',
+                // lot_status: '.lot',
+                seckill_status: '.seckill',
+                card: '.card_count',
+                purchase_count: '.purchase_count',
+                price: '.price',
+                trade_amount: '.trade_amount',
+                draft_status: '.draft_status',
+                widget: '.widget',
+            },
+            callback: {
+                share_url: {
+                    element: '.share_url',
+                },
+                trade_amount: {
+                    monitor: (res) => {
+                        if (res.couponMoney != 0) {
+                            $('.discount').html('$' + res.couponMoney);
+                        } else {
+                            $('.discount').html('$0');
+                        }
+                    }
+                },
+                race: {
+                    wholesale: {
+                        success: (num, money, status) => {
+                            if (status) {
+                                wholesale_html += '<div class="lot_string">一次性购买' + num + '张，单价自动调整为：<b>¥' + money + '</b></div>';
+                            } else {
+                                $('.lot').hide();
+                            }
+                        },
+                        yes: (res) => {
+                            $('.lot').html(wholesale_html);
+                            wholesale_html = '';
+                            $('.lot').show();
+                        }
+                    },
+                    callback: (key, raceIndex, status) => {
+                        if (status) {
+                            $('.race-view').append('<span data-id="' + key + '" class="badge border text-primary race-click ' + (raceIndex == 0 ? 'border-primary' : '') + '">' + key + '</span> ');
+                        } else {
+                            $('.race-view').hide();
+                        }
+                    },
+                    monitor: {
+                        element: '.race-click',
+                        success: (name, res, element, click) => {
+                            $(element).removeClass("border-primary");
+                            $(click).addClass("border-primary");
+                            acg.API.tradeAmountPerform('.trade_amount');
+                        }
+                    },
+                }
+            },
+            success: res => {
+                $('.cover').attr("src", res.cover);
+                $('.qq-service').attr("href", 'https://wpa.qq.com/msgrd?v=1&uin=' + res.service_qq);
+                $('.web-service').attr("href", res.service_url);
+            }
+        });
+
+    });
+    layui.define(['layer'], function () {
+
+    });
+
+</script>
+</body>
+</html>

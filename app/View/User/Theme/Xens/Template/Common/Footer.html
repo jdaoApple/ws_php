@@ -1,0 +1,72 @@
+<!-- Footer -->
+<footer class="bg-white iq-footer">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-6">
+                <ul class="list-inline mb-0">
+                    <li class="list-inline-item"><a href="#">隐私政策</a></li>
+                    <li class="list-inline-item"><a href="#">使用条款</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-6 text-right">
+                Copyright 2022 <a href="#">Xens</a> All Rights By <a href="https://o.ls">MarkCode</a>.
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- Footer END -->
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="#{$static}/Assets/js/jquery.min.js"></script>
+<script src="#{$static}/Assets/js/popper.min.js"></script>
+<script src="#{$static}/Assets/js/bootstrap.min.js"></script>
+<!-- Appear JavaScript -->
+<script src="#{$static}/Assets/js/jquery.appear.js"></script>
+<!-- Countdown JavaScript -->
+<script src="#{$static}/Assets/js/countdown.min.js"></script>
+<!-- Counterup JavaScript -->
+<script src="#{$static}/Assets/js/waypoints.min.js"></script>
+<script src="#{$static}/Assets/js/jquery.counterup.min.js"></script>
+<!-- Wow JavaScript -->
+<script src="#{$static}/Assets/js/wow.min.js"></script>
+<!-- Apexcharts JavaScript -->
+<script src="#{$static}/Assets/js/apexcharts.js"></script>
+<!-- Slick JavaScript -->
+<script src="#{$static}/Assets/js/slick.min.js"></script>
+<!-- Select2 JavaScript -->
+<script src="#{$static}/Assets/js/select2.min.js"></script>
+<!-- Owl Carousel JavaScript -->
+<script src="#{$static}/Assets/js/owl.carousel.min.js"></script>
+<!-- Magnific Popup JavaScript -->
+<script src="#{$static}/Assets/js/jquery.magnific-popup.min.js"></script>
+<!-- Smooth Scrollbar JavaScript -->
+<script src="#{$static}/Assets/js/smooth-scrollbar.js"></script>
+<!-- lottie JavaScript -->
+<script src="#{$static}/Assets/js/lottie.js"></script>
+<!-- Chart Custom JavaScript -->
+<script src="#{$static}/Assets/js/chart-custom.js"></script>
+<!-- Custom JavaScript -->
+<script src="#{$static}/Assets/js/custom.js"></script>
+<script src="/assets/static/bootstrap-table/js/bootstrap-table.min.js"></script>
+<script src="/assets/static/bootstrap-table/js/bootstrap-table-zh-CN.js"></script>
+<script src="/assets/static/wangEditor.min.js"></script>
+<script src="/assets/static/clipboard.js"></script>
+<script src="/assets/static/jquery.qrcode.min.js"></script>
+
+<script>
+
+    layui.config({
+        version: "#{$app.version}011"
+    });
+
+    layui.define(['layer', 'element'], function (exports) {
+        $('.logout').click(function () {
+            layer.confirm('您是否要注销登录？', {
+                btn: ['确认', '取消'],
+                title: "安全注销"
+            }, function () {
+                window.location.href = "/user/authentication/logout";
+            });
+        });
+    });
+</script>

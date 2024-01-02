@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <!-- Required meta tags -->
+  #{include file="../../Common/Header.html"}
+</head>
+<body>
+<!-- loader Start -->
+#{include file="../../Common/Loader.html"}
+<!-- loader END -->
+<!-- Wrapper Start -->
+<div class="wrapper">
+  <!-- Sidebar  -->
+  #{include file="../../Common/Sidebar.html"}
+  <!-- TOP Nav Bar -->
+  #{include file="../../Common/TopBar.html"}
+  <!-- TOP Nav Bar END -->
+  <!-- Responsive Breadcrumb End-->
+  <!-- Page Content  -->
+  <div id="content-page" class="content-page">
+    <div class="container-fluid">
+
+    </div>
+  </div>
+</div>
+<!-- Wrapper END -->
+<!-- Footer -->
+#{include file="../../Common/Footer.html"}
+
+<script>
+  layui.define(['layer', 'hex'], function () {
+    var table = layui.table
+            , form = layui.form
+            , util = layui.util
+            , cao = layui.hex
+            , $ = layui.$;
+
+  });
+
+</script>
+</body>
+</html>

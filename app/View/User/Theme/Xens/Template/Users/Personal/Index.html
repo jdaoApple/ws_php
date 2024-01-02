@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    #{include file="../../Common/Header.html"}
+</head>
+<body>
+<!-- loader Start -->
+#{include file="../../Common/Loader.html"}
+<!-- loader END -->
+<!-- Wrapper Start -->
+<div class="wrapper">
+    <!-- Sidebar  -->
+    #{include file="../../Common/Sidebar.html"}
+    <!-- TOP Nav Bar -->
+    #{include file="../../Common/TopBar.html"}
+    <!-- TOP Nav Bar END -->
+    <!-- Responsive Breadcrumb End-->
+    <!-- Page Content  -->
+    <div id="content-page" class="content-page">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="iq-card">
+                        <div class="iq-card-body p-0">
+                            <div class="iq-edit-list">
+                                <ul class="iq-edit-profile d-flex nav nav-pills">
+                                    <li class="col-md-3 p-0">
+                                        <a class="nav-link active" data-toggle="pill" href="#personal-information">
+                                            个人资料
+                                        </a>
+                                    </li>
+                                    <li class="col-md-3 p-0">
+                                        <a class="nav-link" data-toggle="pill" href="#chang-pwd">
+                                            修改密码
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="iq-edit-list-data">
+                        <div class="tab-content">
+                            <div class="tab-pane fade active show" id="personal-information" role="tabpanel">
+                                <div class="iq-card">
+                                    <div class="iq-card-header d-flex justify-content-between">
+                                        <div class="iq-header-title">
+                                            <h4 class="card-title">个人资料</h4>
+                                        </div>
+                                    </div>
+                                    <div class="iq-card-body">
+                                        <form class="layui-form form-data">
+                                            <div class="form-group row align-items-center">
+                                                <div class="col-md-12">
+                                                    <div class="profile-img-edit">
+                                                        <img class="profile-pic avatar-img" src="#{$user.avatar}"
+                                                             alt="profile-pic">
+                                                        <div class="p-image">
+                                                            <i class="ri-pencil-line"
+                                                               onclick="document.getElementsByClassName('avatar-input')[0].click()"></i>
+                                                            <input class="file-upload avatar-input" type="file"
+                                                                   accept="image/*"/>
+                                                            <input type="text" name="avatar" style="display: none;"
+                                                                   value="#{$user.avatar}">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class=" row align-items-center">
+                                                <div class="form-group col-sm-6">
+                                                    <label for="nicename">真实姓名(提现):</label>
+                                                    <input type="text" class="form-control" value="#{$user.nicename}"
+                                                           id="nicename" name="nicename"
+                                                           autocomplete="off"
+                                                           placeholder="请输入您的真实姓名">
+                                                </div>
+                                                <div class="form-group col-sm-6">
+                                                    <label for="qq">QQ号:</label>
+                                                    <input type="text" class="form-control" value="#{$user.qq}" id="qq"
+                                                           name="qq" autocomplete="off"
+                                                           placeholder="请输入QQ号">
+                                                </div>
+                                                <div class="form-group col-sm-6">
+                                                    <label>自动结算方式:</label>
+                                                    <select class="form-control" name="settlement">
+                                                        <option value="0" #{if $user.settlement== 0} selected #{/if}>支付宝</option>
+                                                        <option value="1" #{if $user.settlement== 1} selected #{/if}>微信</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="form-group col-sm-6">
+                                                    <label for="alipay">支付宝账号(提现):</label>
+                                                    <input type="text" class="form-control" id="alipay"
+                                                           value="#{$user.alipay}" name="alipay"
+                                                           autocomplete="off"
+                                                           placeholder="兑现使用的支付宝账号">
+                                                </div>
+
+                                                <div class="form-group col-sm-12">
+                                                    <label for="alipay">微信收款二维码(提现)</label>
+                                                    <div class="media">
+                                                        <input type="text" name="wechat" style="display: none;" value="">
+                                                        <input type="file" class="wechat-input" style="display: none;">
+
+                                                        #{if $user.wechat == ''}
+                                                        <i class="layui-icon wx_qrcode_temp"
+                                                           onclick="document.getElementsByClassName('wechat-input')[0].click()"
+                                                           style="font-size: 32px;color: #0C84D1;cursor: pointer;">&#xe681;</i>
+                                                        #{else}
+                                                        <div class="wx_qrcode"
+                                                             onclick="document.getElementsByClassName('wechat-input')[0].click()"></div>
+                                                        #{/if}
+
+
+                                                    </div>
+                                                </div>
+
+                                                <!--start::HOOK-->
+                                                #{hook(\App\Consts\Hook::USER_VIEW_PERSONAL_FORM)}
+                                                <!--end::HOOK-->
+                                            </div>
+                                            <div type="submit" class="btn btn-primary mr-2 save-data">保存资料</div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="chang-pwd" role="tabpanel">
+                                <div class="iq-card">
+                                    <div class="iq-card-header d-flex justify-content-between">
+                                        <div class="iq-header-title">
+                                            <h4 class="card-title">修改密码</h4>
+                                        </div>
+                                    </div>
+                                    <div class="iq-card-body">
+                                        <form class="form-pass-data">
+                                            <div class="form-group">
+                                                <label for="old_password">旧密码:</label>
+                                                <input type="Password" class="form-control" name="old_password" id="old_password">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="password">新密码:</label>
+                                                <input type="Password" class="form-control" name="password" id="password">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="re_password">验证密码:</label>
+                                                <input type="Password" class="form-control" name="re_password" id="re_password">
+                                            </div>
+                                            <div type="submit" class="btn btn-primary mr-2 editPass">修改密码</div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Wrapper END -->
+<!-- Footer -->
+#{include file="../../Common/Footer.html"}
+
+<script>
+    layui.define(['layer', 'hex'], function () {
+        var table = layui.table
+            , form = layui.form
+            , util = layui.util
+            , cao = layui.hex
+            , $ = layui.$;
+
+
+        $('.wx_qrcode').qrcode({
+            render: "canvas",
+            width: 150,
+            height: 150,
+            text: "#{$user.wechat}"
+        });
+
+        User.upload(".avatar-input", res => {
+            $('input[name=avatar]').val(res.path);
+            $('.avatar-img').attr("src", res.path);
+        });
+
+        User.upload(".wechat-input", res => {
+            $('input[name=wechat]').val(res.path);
+            $('.wx_qrcode').html('<img class="wechat-img" src="' + res.path + '" style="width: 100px;cursor: pointer;"   onclick="document.getElementsByClassName(\'wechat-input\')[0].click()">');
+            $('.wx_qrcode_temp').html('<img class="wechat-img" src="' + res.path + '" style="width: 100px;cursor: pointer;"   onclick="document.getElementsByClassName(\'wechat-input\')[0].click()">');
+            layer.msg("上传完成，需要保存才会生效哦");
+        });
+
+        $('.save-data').click(function () {
+            User.$post("/user/api/security/personal", $('.form-data').serialize(), res => {
+                layer.msg("保存成功");
+            })
+        });
+
+        $('.editPass').click(function () {
+            User.$post("/user/api/security/password", $('.form-pass-data').serialize(), res => {
+                layer.msg("修改成功");
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1500);
+            })
+        });
+    });
+
+</script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+#{if $smarty.get.tradeNo == ""}
+    #{\App\Util\Client::redirect("/#query", "请稍等..", 0)}
+#{else}
+    #{\App\Util\Client::redirect("/?tradeNo=#{$smarty.get.tradeNo}#query", "请稍等..", 0)}
+#{/if}

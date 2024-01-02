@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    #{include file="../../Common/Header.html"}
+</head>
+<body>
+<!-- loader Start -->
+#{include file="../../Common/Loader.html"}
+<!-- loader END -->
+<!-- Wrapper Start -->
+<div class="wrapper">
+    <!-- Sidebar  -->
+    #{include file="../../Common/Sidebar.html"}
+    <!-- TOP Nav Bar -->
+    #{include file="../../Common/TopBar.html"}
+    <!-- TOP Nav Bar END -->
+    <!-- Responsive Breadcrumb End-->
+    <!-- Page Content  -->
+    <div id="content-page" class="content-page">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-12 col-lg-12">
+                    <div class="iq-card">
+                        <div class="iq-card-header d-flex justify-content-between">
+                            <div class="iq-header-title">
+                                <h4 class="card-title">我的下级</h4>
+                            </div>
+                        </div>
+                        <div class="iq-card-body">
+                            <p>前往 <code>我的主页</code> 获得推广链接,来赚取更多佣金吧~</p>
+                            <form class="search-query"></form>
+                            <table id="member"></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Wrapper END -->
+<!-- Footer -->
+#{include file="../../Common/Footer.html"}
+
+<script>
+    layui.define(['layer', 'hex'], function () {
+        var table = layui.table
+            , form = layui.form
+            , util = layui.util
+            , cao = layui.hex
+            , $ = layui.$;
+
+
+        var tableIns = table.render({
+            elem: '#member',
+            method: "post",
+            url: '/user/api/agentMember/data',
+            page: true, //开启分页
+            parseData: (res) => {
+                if (res.code === 200) {
+                    return {
+                        "code": 0,
+                        "msg": res.msg,
+                        "count": res.count,
+                        "data": res.data
+                    };
+                }
+            },
+            cols: [
+                [
+                    {field: 'id', title: 'ID', width: 80},
+                    {
+                        field: 'avatar', title: '用户', templet: function (item) {
+                            if (!item.avatar) {
+                                item.avatar = "/favicon.ico";
+                            }
+                            return '<span><img src="' + item.avatar + '"  style="width: 18px;border-radius: 100%;"/> ' + item.username + '</span> '
+                        }
+                    },
+                    {
+                        field: 'group', title: '会员等级', templet: function (item) {
+                            return '<img style="height: 32px;" src="' + item.group.icon + '" title="' + item.group.name + ' (减免:' + (item.group.discount * 100) + '%)">'
+                        }
+                    },
+                    {
+                        field: 'email', title: '邮箱', templet: function (item) {
+                            if (!item.email) {
+                                return "-";
+                            }
+                            return item.email;
+                        }
+                    },
+                    {
+                        field: 'phone', title: '手机号', templet: function (item) {
+                            if (!item.phone) {
+                                return "-";
+                            }
+                            return item.phone;
+                        }
+                    },
+                    {
+                        field: 'qq', title: 'QQ', templet: function (item) {
+                            if (!item.qq) {
+                                return "-";
+                            }
+                            return item.qq;
+                        }
+                    },
+                    {
+                        field: 'balance', title: '余额', templet: function (item) {
+                            return '<span class="badge badge-primary">￥' + item.balance + '</span>'
+                        }
+                    },
+                    {
+                        field: 'recharge', title: '总充值', templet: function (item) {
+                            return '<span class="badge badge-primary">￥' + item.recharge + '</span>'
+                        }
+                    },
+                    {
+                        field: 'create_time', title: '注册时间'
+                    }
+                ]
+            ],
+            done: (res) => {
+                table.render();
+                cao.setIdMap(res.data);
+
+                $('.lock').click(function () {
+                    let id = cao.getMapItem($(this).attr('data-id')).id;
+                    $.post('/user/api/card/lock', {list: [id]}, res => {
+                        layer.msg(res.msg);
+                        tableIns.reload();
+                    });
+                });
+                $('.unlock').click(function () {
+                    let id = cao.getMapItem($(this).attr('data-id')).id;
+                    $.post('/user/api/card/unlock', {list: [id]}, res => {
+                        layer.msg(res.msg);
+                        tableIns.reload();
+                    });
+                });
+
+                $('.delete').click(function () {
+                    let remove_id = cao.getMapItem($(this).attr('data-id')).id;
+                    layer.confirm('您正在移除该卡密，是否要继续？', {
+                        btn: ['确认移除', '取消']
+                    }, function () {
+                        $.post('/user/api/card/del', {list: [remove_id]}, res => {
+                            layer.msg(res.msg);
+                            tableIns.reload();
+                        });
+                    });
+                });
+            }
+        });
+
+        cao.query('.search-query', table, [
+            {
+                title: "查询会员ID", name: "equal-id", type: "input"
+            }
+        ], true, false, (res) => {
+            tableIns.reload({
+                where: res,
+                page: {
+                    curr: 1
+                }
+            }, false);
+        });
+    });
+
+</script>
+</body>
+</html>

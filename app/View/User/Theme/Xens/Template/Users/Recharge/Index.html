@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    #{include file="../../Common/Header.html"}
+</head>
+<body>
+<!-- loader Start -->
+#{include file="../../Common/Loader.html"}
+<!-- loader END -->
+<!-- Wrapper Start -->
+<div class="wrapper">
+    <!-- Sidebar  -->
+    #{include file="../../Common/Sidebar.html"}
+    <!-- TOP Nav Bar -->
+    #{include file="../../Common/TopBar.html"}
+    <!-- TOP Nav Bar END -->
+    <!-- Responsive Breadcrumb End-->
+    <!-- Page Content  -->
+    <div id="content-page" class="content-page">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-12 col-lg-12">
+                    <div class="alert bg-white alert-primary" role="alert">
+                        <div class="iq-alert-text">累计充值：<b style="color: #0C84D1;">¥#{$user.recharge}</b>，您当前用户等级：<b
+                                style="color: #0C84D1;">#{$user.group.name}</b>，购物时可以享受：<b
+                                style="color: #0C84D1;">#{$user.group.discount*100}%折扣</b>
+                            #{if $groupNext}，升级到
+                            <b style="color: #8d16e3;">#{$groupNext.name}[折扣:#{$groupNext.discount*100}%]</b>
+                            还需要充值
+                            <b style="color: #8d16e3;">¥#{$groupNext.recharge-$user.recharge}</b>
+                            #{/if}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                #{if $config.recharge_welfare == 1 && count($welfareConfig) > 0}
+                <div class="col-sm-3 col-lg-3">
+                    <div class="iq-card">
+                        <div class="iq-card-header d-flex justify-content-between">
+                            <div class="iq-header-title">
+                                <h4 class="card-title">充值优惠</h4>
+                            </div>
+                        </div>
+
+                        <div class="iq-card-body">
+                            #{foreach $welfareConfig as $wc}
+                            <div class="alert bg-white alert-success" role="alert">
+                                <div class="iq-alert-text">一次性充值<b
+                                        style="color: #f15858;">￥#{$wc.recharge}</b>，赠送<b
+                                        style="color: #6a71f1;">￥#{$wc.amount}</b></div>
+                            </div>
+                            #{/foreach}
+                        </div>
+                    </div>
+                </div>
+                #{/if}
+<!--                <div class="col-sm-4 col-lg-4">-->
+<!--                    <div class="iq-card">-->
+<!--                        <div class="iq-card-header d-flex justify-content-between">-->
+<!--                            <div class="iq-header-title">-->
+<!--                                <h4 class="card-title">充值通道</h4>-->
+<!--                            </div>-->
+<!--                        </div>-->
+
+<!--                        <div class="iq-card-body">-->
+<!--                            <ul class="list-inline p-0 m-0 pay-list"></ul>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+                <div class="col-sm-12 col-lg-12">
+                    <div class="iq-card">
+                        <div class="iq-card-header d-flex justify-content-between">
+                            <div class="iq-header-title">
+                                <h4 class="card-title">充值余额</h4>
+                            </div>
+                        </div>
+
+                        <div class="iq-card-body">
+                            <form class="form-horizontal">
+<!--                                <div class="form-group row">-->
+<!--                                    <label class="control-label col-sm-2 align-self-center mb-0">用户名:</label>-->
+<!--                                    <div class="col-sm-10" style="color: #63b584;">-->
+<!--                                        <b>#{$user.username}</b>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="form-group row">-->
+<!--                                    <label class="control-label col-sm-2 align-self-center mb-0">当前余额:</label>-->
+<!--                                    <div class="col-sm-10" style="color: #63b584;">-->
+<!--                                        <b>#{$user.balance}元</b>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+                                <div class="font-size-18">注意事项</div>
+                                <div>1 USDT兑换 <span class="text-primary">70</span> 积分</div>
+                                <div>• 请在兑换时<span class="text-primary">从平台获取最新的TRC20地址,地址随时有可能更换。</span></div>
+                                <div>• 请不要使用非TRC20地址发送TRC20_USDT，否则资产将无法收回。</div>
+                                <div>• <span class="text-primary">最低兑换金额:1 USDT，</span>若低于最低金额，则余额不增加，资产不追回。</div>
+                                <div>• 请确保您的计算机和浏览器是安全的，以防止信息被篡改或泄露。</div>
+                                <div>• 务必要输入正确的付款金额，否则将收不到款。</div>
+                                <div>• 转账完成后系统将自动增加相应积分</div>
+
+                                <div class="form-group row">
+                                    <label class="control-label col-sm-2 align-self-center mb-0"
+                                           for="amount">充值金额:</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" id="amount" name="amount"
+                                               value="#{if $config.recharge_min == 0}10#{else}#{$config.recharge_min}#{/if}"
+                                               autocomplete="off" placeholder="请输入您要充值的金额~">
+                                    </div>
+                                </div>
+                                <div class="font-size-18">充值通道</div>
+                                <ul class="list-inline p-0 m-0 pay-list"></ul>
+                                <div class="form-group">
+                                    <div type="submit" class="btn btn-primary payButton">确定充值</div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="iq-card iq-card-block iq-card-stretch iq-card-height">
+                        <div class="iq-card-header d-flex justify-content-between">
+                            <div class="iq-header-title">
+                                <h4 class="card-title">会员等级划分</h4>
+                            </div>
+                        </div>
+                        <div class="iq-card-body">
+                            <div class="table-responsive">
+                                <table class="table mb-0 table-borderless">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">等级</th>
+                                        <th scope="col">累计充值</th>
+                                        <th scope="col">购物折扣</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    #{foreach $groups as $g}
+                                    <tr>
+                                        <td><img src="#{$g.icon}" style="height: 32px;"> <span
+                                                class="badge badge-pill badge-light">#{$g.name}</span></td>
+                                        <td style="color: #f68b8b;font-weight: bolder;">￥#{$g.recharge}</td>
+                                        <td>#{$g.discount*100}%</td>
+                                    </tr>
+                                    #{/foreach}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Wrapper END -->
+<!-- Footer -->
+#{include file="../../Common/Footer.html"}
+
+<script>
+
+    let payId = 0;
+
+    function payClick(obj, id) {
+        $('.border-primary').removeClass('border-primary');
+        $(obj).addClass('border-primary');
+        payId = id;
+    }
+
+    layui.define(['layer', 'hex'], function () {
+        var table = layui.table
+            , form = layui.form
+            , util = layui.util
+            , cao = layui.hex
+            , $ = layui.$;
+        User.getPay(res => {
+            res.forEach(item => {
+                let html = `<li class="d-flex mb-3 align-items-center p-3 sell-list rounded" onclick="payClick(this,` + item.id + `)">
+                                    <div class="user-img img-fluid">
+                                        <img src="` + item.icon + `" alt="story-img" class="img-fluid rounded-circle avatar-40">
+                                    </div>
+                                    <div class="media-support-info ml-3">
+                                        <h6>` + item.name + `</h6>
+                                    </div>
+                                    <div class="iq-card-header-toolbar d-flex align-items-center">
+                                        <div class="badge badge-pill badge-primary">` + item.handle + `</div>
+                                    </div>
+                                </li>`;
+                $('.pay-list').append(html);
+            });
+        });
+        $('.payButton').click(function () {
+            User.trade({
+                pay_id: payId,
+                amount: $('input[name=amount]').val()
+            }, res => {
+                window.location.href = res.url;
+            });
+        });
+    });
+
+</script>
+</body>
+</html>

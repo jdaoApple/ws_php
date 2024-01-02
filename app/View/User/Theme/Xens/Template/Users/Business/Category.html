@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    #{include file="../../Common/Header.html"}
+</head>
+<body>
+<!-- loader Start -->
+#{include file="../../Common/Loader.html"}
+<!-- loader END -->
+<!-- Wrapper Start -->
+<div class="wrapper">
+    <!-- Sidebar  -->
+    #{include file="../../Common/Sidebar.html"}
+    <!-- TOP Nav Bar -->
+    #{include file="../../Common/TopBar.html"}
+    <!-- TOP Nav Bar END -->
+    <!-- Responsive Breadcrumb End-->
+    <!-- Page Content  -->
+    <div id="content-page" class="content-page">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-12 col-lg-12">
+                    <div class="iq-card">
+                        <div class="iq-card-header d-flex justify-content-between">
+                            <div class="iq-header-title">
+                                <h4 class="card-title">商品分类</h4>
+                            </div>
+                        </div>
+                        <div class="iq-card-body">
+                             <span class="float-right mb-3 mr-2">
+                              <button class="btn btn-sm iq-bg-success button-add">
+                                  <i class="ri-add-fill"><span class="pl-1">创建分类</span></i>
+                              </button>
+                           </span>
+                            <p>创建一个 <code>商品分类</code> 开始管理您的商店~</p>
+                            <table id="category"></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Wrapper END -->
+<!-- Footer -->
+#{include file="../../Common/Footer.html"}
+
+<script>
+    layui.use(['hex'], function () {
+        var table = layui.table
+            , form = layui.form
+            , util = layui.util
+            , cao = layui.hex
+            , $ = layui.$;
+
+
+        let modal = (values = {}) => {
+            cao.popup('/user/api/category/save', [
+                {
+                    title: "分类图标",
+                    name: "icon",
+                    type: "image",
+                    placeholder: "请选择图片(推荐64*64)",
+                    width: 64,
+                    uploadUrl: User.property.uploadUrl
+                },
+                {title: "分类名称", name: "name", type: "input", placeholder: "请输入分类名称"},
+                {title: "分类排序", name: "sort", type: "input", default: 1000, placeholder: "最低1000起，值越小，排名越靠前哦~"},
+                {title: "状态", name: "status", type: "switch", text: "启用"},
+            ], res => {
+                table.reload('category');
+            }, values, "480px");
+        }
+
+
+        $('.button-add').click(function () {
+            modal();
+        });
+
+
+        table.render({
+            elem: '#category',
+            url: '/user/api/category/data',
+            page: true, //开启分页
+            method: "post",
+            parseData: (res) => {
+                if (res.code === 200) {
+                    return {
+                        "code": 0,
+                        "msg": res.msg,
+                        "count": res.count,
+                        "data": res.data
+                    };
+                }
+            },
+            cols: [
+                [
+                    {type: 'checkbox'},
+                    {
+                        field: 'icon', title: '图标', templet: function (item) {
+                            if (!item.icon) {
+                                return "-";
+                            }
+                            return '<img src="' + item.icon + '"  style="height: 28px;"/>'
+                        }
+                    },
+                    {
+                        field: 'name', title: '绑定组名', templet: function (res) {
+                            return '<span class="badge badge-primary">' + res.name + '</span>';
+                        }
+                    },
+                    {
+                        title: '状态', width: 100, templet: function (res) {
+                            switch (res.status) {
+                                case 1:
+                                    return '<span class="badge border border-success text-success">启用</span>';
+                                case 0:
+                                    return '<span class="badge border border-warning text-warning">停用</span>';
+                            }
+                        }
+                    },
+                    {field: 'sort', title: '排序(越小越前)'},
+                    {
+                        title: '操作', width: 120, templet: function (res) {
+                            return `<div class="flex align-items-center list-user-action">
+                                          <a class="iq-bg-primary edit" data-id="` + res.id + `" title="修改分类"  href="javascript:void(0)"><i class="ri-pencil-line"></i></a>
+                                          <a class="iq-bg-primary delete" data-id="` + res.id + `" title="删除分类"  href="javascript:void(0)"><i class="ri-delete-bin-7-line"></i></a>
+                                       </div>`;
+                        }
+                    },
+                ]
+            ],
+            done: (res) => {
+                table.render();
+                cao.setIdMap(res.data);
+                $('.edit').click(function () {
+                    modal(cao.getMapItem($(this).attr('data-id')));
+                });
+                $('.delete').click(function () {
+                    let remove_id = cao.getMapItem($(this).attr('data-id')).id;
+                    layer.confirm('您确定要删除这个分类吗？', {
+                        btn: ['确认删除', '取消']
+                    }, function () {
+                        $.post('/user/api/category/del', {id: remove_id}, res => {
+                            layer.msg(res.msg);
+                            table.reload('category');
+                        });
+                    });
+                });
+            }
+        });
+
+    });
+
+</script>
+</body>
+</html>

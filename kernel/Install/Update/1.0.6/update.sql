@@ -1,0 +1,1 @@
+ALTER TABLE __PREFIX__order ADD `pay_cost` decimal(10, 2) UNSIGNED NULL DEFAULT 0.00 COMMENT '支付接口手续费';

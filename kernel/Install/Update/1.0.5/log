@@ -1,0 +1,2 @@
+<p>1.[优化]修复分站返佣，把卡密预选溢价也一起反了</p>
+<p>2.[新增]OrderService新增Hook点：USER_API_ORDER_TRADE_PAY_BEGIN</p>
