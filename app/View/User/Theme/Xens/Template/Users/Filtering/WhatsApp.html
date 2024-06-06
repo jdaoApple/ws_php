@@ -89,23 +89,28 @@
                         }
                     },
                     {
+                        field: 'country', title: '任务国家', templet: function (item) {
+                            return `<span style="color: #0C84D1;">${item.country}</span>`;
+                        }
+                    },
+                    {
                         field: 'taskTotal', title: '进度/总数', templet: function (item) {
                             return `<span style="color: #0C84D1;">${item.taskProgress}/${item.taskTotal}</span>`;
                         }
                     },
                     {
-                        field: 'taskState', title: '任务状态', templet: function (item) {
-                            return item.taskState;
+                        field: 'taskTotal', title: '有效数', templet: function (item) {
+                            return `<span style="color: #0C84D1;">${item.taskValid}</span>`;
                         }
                     },
                     {
-                        field: 'create_time', title: '创建时间', templet: function (item) {
-                            return '<span class="text-secondary">' + item.create_time + '</span>';
-                        }, width: 170
+                        field: 'state', title: '任务状态', templet: function (item) {
+                            return item.state;
+                        }
                     },
                     {
-                        field: 'update_time', title: '更新时间', templet: function (item) {
-                            return '<span class="text-secondary">' + item.update_time + '</span>';
+                        field: 'create_time', title: '时间', templet: function (item) {
+                            return '<span class="text-secondary">'+item.create_time + '</span>';
                         }, width: 170
                     },
                     {
@@ -133,11 +138,15 @@
                 cao.setIdMap(res.data);
 
                 $('.download').click(function () {
-                    let url = cao.getMapItem($(this).attr('data-id')).taskResultUrl;
-                    if (url == ''){
+                    let status = cao.getMapItem($(this).attr('data-id')).taskState;
+                    let id = cao.getMapItem($(this).attr('data-id')).id;
+                    if (status != 3){
                         layer.msg('任务还没有完成');
                     }else{
-                        download(url,url.split('/').pop())
+                        $.post('/user/api/filtering/download', {id: id}, res => {
+                            let url = res.data.url
+                            download(url,id + '.txt')
+                        });
                     }
                 });
 
@@ -161,10 +170,10 @@
             {title: "ID", name: "equal-id", type: "input"},
             {
                 title: "任务状态", name: "equal-taskState", type: "select", dict: [
-                    {id: 'Close', name: "关闭"},
-                    {id: 'Finish', name: "完成"},
-                    {id: 'Ongoing', name: "正在进行"},
-                    {id: 'Waiting', name: "等待"},
+                    {id: 1, name: "初始化"},
+                    {id: 2, name: "进行中"},
+                    {id: 3, name: "已完成"},
+                    {id: 4, name: "关闭任务"},
                 ]
             },
         ], true, false, (res) => {
@@ -186,37 +195,47 @@
                     placeholder: "请输入描述信息",
                 },
                 {
-                    title: "筛选类型", name: "type", type: "select", dict: [
-                        {id: 'filterNumber', name: "筛选开通"},
-                        {id: 'filterActive', name: "筛选活跃"},
-                    ],placeholder: "筛选类型",
+                    title: "筛选类型",
+                    name: "type", 
+                    type: "select", 
+                    search:true,
+                    dict: #{$type},
+                    placeholder: "筛选类型",
                 },
                 {
-                    title: "任务目标来源",
-                    name: "delivery_way",
-                    type: "radio",
-                    placeholder: "请选择",
-                    dict: [{id: 0, name: "上传Txt"}, {id: 1, name: "在线生成"}],
-                    default: 0,
-                    required: true,
-                    change: function (value) {
-                        let number = cao.popupElement("number", "input", modalUnqueId).parent().parent();
-                        let txt_file = cao.popupElement("txt_file", "file", modalUnqueId).parent();
-                        let number_start = cao.popupElement("number_start", "input", modalUnqueId).parent().parent();
-                        let number_incremental = cao.popupElement("number_incremental", "input", modalUnqueId).parent().parent();
-                        if(value == 1){
-                            txt_file.hide();
-                            number.hide();
-                            number_start.show();
-                            number_incremental.show();
-                        }else{
-                            number_start.hide();
-                            number_incremental.hide();
-                            number.show();
-                            txt_file.show();
-                        }
-                    }
+                    title: "筛选国家",
+                    name: "country", 
+                    type: "select", 
+                    search:true,
+                    dict: #{$country},
+                    placeholder: "请选择筛选国家",
                 },
+                // {
+                //     title: "任务目标来源",
+                //     name: "delivery_way",
+                //     type: "radio",
+                //     placeholder: "请选择",
+                //     dict: [{id: 0, name: "上传Txt"}, {id: 1, name: "在线生成"}],
+                //     default: 0,
+                //     required: true,
+                //     change: function (value) {
+                //         let number = cao.popupElement("number", "input", modalUnqueId).parent().parent();
+                //         let txt_file = cao.popupElement("txt_file", "file", modalUnqueId).parent();
+                //         let number_start = cao.popupElement("number_start", "input", modalUnqueId).parent().parent();
+                //         let number_incremental = cao.popupElement("number_incremental", "input", modalUnqueId).parent().parent();
+                //         if(value == 1){
+                //             txt_file.hide();
+                //             number.hide();
+                //             number_start.show();
+                //             number_incremental.show();
+                //         }else{
+                //             number_start.hide();
+                //             number_incremental.hide();
+                //             number.show();
+                //             txt_file.show();
+                //         }
+                //     }
+                // },
                 {
                     title: "任务目标",
                     name: "txt_file",
@@ -224,24 +243,27 @@
                     exts: 'txt',
                     uploadUrl:'/user/api/filtering/handle',
                     placeholder: "上传txt文件",
-                },{
-                    title: "任务总数",
-                    name: "number",
-                    type: "input",
-                    placeholder: "请输入任务总数",
-                },{
-                    title: "起始数字",
-                    name: "number_start",
-                    type: "input",
-                    placeholder: "请输入起始数字",
-                    hide:true
-                },{
-                    title: "递增数量",
-                    name: "number_incremental",
-                    type: "input",
-                    placeholder: "请输入递增数量",
-                    hide:true
                 },
+                // {
+                //     title: "任务总数",
+                //     name: "number",
+                //     type: "input",
+                //     placeholder: "请输入任务总数",
+                // },
+                // {
+                //     title: "起始数字",
+                //     name: "number_start",
+                //     type: "input",
+                //     placeholder: "请输入起始数字",
+                //     hide:true
+                // },
+                // {
+                //     title: "递增数量",
+                //     name: "number_incremental",
+                //     type: "input",
+                //     placeholder: "请输入递增数量",
+                //     hide:true
+                // },
             ], res => {
                 tableIns.reload({
                     where: res,
@@ -286,20 +308,13 @@
             window.URL = window.URL || window.webkitURL
             let a = document.createElement('a')
             let blob = new Blob([content])
-// 通过二进制文件创建url
             let url = window.URL.createObjectURL(blob)
             a.href = url
             a.download = filename
             a.click()
-// 销毁创建的url
             window.URL.revokeObjectURL(url)
         }
-
-
-
-
     });
-
 </script>
 </body>
 </html>

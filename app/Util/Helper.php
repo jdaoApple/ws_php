@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace App\Util;
 
 use Kernel\Exception\JSONException;
+use App\Util\Context;
+use GuzzleHttp\Client;
 
 /**
  * 助手
@@ -24,6 +26,76 @@ class Helper
      * 网站模板
      */
     const TYPE_THEME = 2;
+    
+    /**
+     * 获取分类 
+     */
+    public static function getTypeArr($mode = 0,$new = false){
+        //获取任务类型
+        $cache = Context::get('_FILTERING_CONFIG_TYPE');
+        if (!$cache) {
+            $client = new Client();
+            $res = $client->post('https://stq.shuju678.com/api/merchant/api/type.php', [
+                'multipart' => [
+                    [
+                        'name' => 'api_key',
+                        'contents' => '6593fd43783f0f0f8b34cc4d',
+                    ]
+                ],
+            ]);
+            $cache = json_decode($res->getBody()->getContents(), true);
+            if (!empty($cache['data'])) {
+                Context::set('_FILTERING_CONFIG_TYPE', json_encode($cache));
+            }
+        }else{
+            $cache = json_decode($cache,true);
+        }
+        $res = [];
+        if(!empty($cache['data'])){
+            foreach ($cache['data'] as $v){
+                if($mode == 0){
+                    $res[$v['code']] =  $v['name'];
+                }else{
+                    $v['is_maintain'] == 0 && $res[] = ['id' => $v['code'],'name' => $v['name']];
+                }
+            }
+        }
+        return $res;
+    }
+    /**
+     * 获取国家
+     */
+    public static function getCountryArr($mode = 0){
+        $cache = Context::get('_FILTERING_CONFIG_COUNTRY');
+        if (!$cache) {
+            $client = new Client();
+            $res = $client->post('https://stq.shuju678.com/api/merchant/api/country.php', [
+                'multipart' => [
+                    [
+                        'name' => 'api_key',
+                        'contents' => '6593fd43783f0f0f8b34cc4d',
+                    ]
+                ],
+            ]);
+            $cache = json_decode($res->getBody()->getContents(), true);
+            if (!empty($cache['data'])) {
+                Context::set('_FILTERING_CONFIG_COUNTRY', json_encode($cache));
+            }
+        }else{
+            $cache = json_decode($cache,true);
+        }
+        $res = [];
+        if(!empty($cache['data'])){
+            foreach ($cache['data'] as $v){
+                if($mode == 0){
+                    $res[$v['code']] =  $v['name'];
+                }else{
+                    $v['is_maintain'] == 0 && $res[] = ['id' => $v['code'],'name' => $v['name']];
+                }
+            }
+        }
+        return $res;
+    }
 
 
     /**

@@ -78,6 +78,7 @@
 
             function latestOpen(res) {
                 let loaderIndex = layer.load(2, {shade: ['0.3', '#fff']});
+                return;
                 $.get("/admin/api/app/versions", versions => {
                     layer.close(loaderIndex);
                     if (versions.code != 200) {
@@ -126,28 +127,28 @@
                 });
             }
 
-            $.get("/admin/api/app/latest", res => {
-                if (res.code != 200) {
-                    $('.latest-update').css("color", "red").html("应用商店连接失败");
-                    return;
-                }
-                $('.local-version').html(res.data.local);
-                if (res.data.latest) {
-                    $('.latest-version').css("color", "green").html("[ 最新 ]");
-                } else {
-                    $('.latest-version').css("color", "red").html("[ 更新 v" + res.data.version + " ]");
-                    let cache = localStorage.getItem(res.data.version);
-                    //第一次检测到版本，主动打开更新窗口
-                    if (!cache) {
-                        latestOpen(res);
-                        localStorage.setItem(res.data.version, true);
-                    }
-                }
+            // $.get("/admin/api/app/latest", res => {
+            //     if (res.code != 200) {
+            //         $('.latest-update').css("color", "red").html("应用商店连接失败");
+            //         return;
+            //     }
+            //     $('.local-version').html(res.data.local);
+            //     if (res.data.latest) {
+            //         $('.latest-version').css("color", "green").html("[ 最新 ]");
+            //     } else {
+            //         $('.latest-version').css("color", "red").html("[ 更新 v" + res.data.version + " ]");
+            //         let cache = localStorage.getItem(res.data.version);
+            //         //第一次检测到版本，主动打开更新窗口
+            //         if (!cache) {
+            //             latestOpen(res);
+            //             localStorage.setItem(res.data.version, true);
+            //         }
+            //     }
 
-                $('.latest-update').click(function () {
-                    latestOpen(res);
-                });
-            });
+            //     $('.latest-update').click(function () {
+            //         latestOpen(res);
+            //     });
+            // });
 
 
             $.get("/admin/api/app/getUpdates", res => {

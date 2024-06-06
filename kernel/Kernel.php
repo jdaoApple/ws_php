@@ -152,8 +152,8 @@ try {
         header("Content-type: text/html; charset=utf-8");
         echo $result;
     }
-//}catch (\Exception $e){
-//    var_dump($e->getMessage());
+// }catch (\Exception $e){
+//     var_dump($e->getMessage());
 
 } catch (Throwable $e) {
     if ($e instanceof \Kernel\Exception\NotFoundException) {
